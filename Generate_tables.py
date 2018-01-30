@@ -4,24 +4,48 @@
 # PROGRAM IMPLEMENTATION:
 
 DataDir = "../Data/"
-print("adeu")
+#print("adeu")
 
 # Process the files with bash
 
 import os
+
+#ID mapping file:
 os.system("awk -v FS='\\t' -v OFS='\\t' '{print $2,$3,$19}' "+DataDir+"HUMAN_9606_idmapping_selected.tab >" +DataDir+"HUMAN_9606_idmapping_selected_simple.tab")
+
+#Gene info file
+os.system("awk -v FS='\\t' -v OFS='\\t' '{print $1,$3,$5,$6}' "+DataDir+"Homo_sapiens.gene_info | grep Ensembl >" +DataDir+"Homo_sapiens_simple.gene_info")
+
 
 # define input files:
 
 IDmap_filename = DataDir+"HUMAN_9606_idmapping_selected_simple.tab"
 Sprot_filename = DataDir+"uniprot_sprot_human.dat"
+Gene_info_filename = DataDir+"Homo_sapiens_simple.gene_info"
 
-# define output:
+# define output files:
 
-UniProt_integrated_filename = DataDir+"Uniprot_integrated_human.tab"
-Multifasta_filename = DataDir+"Sprot_human.fa"
+#UniProt_integrated_filename = DataDir+"Uniprot_integrated_human.tab"
+#Multifasta_filename = DataDir+"Sprot_human.fa"
+
+
+# Parse the Gene_info_filename and record into a dictionary (Key: ENSEMBLid) a list that has [RecName, TaxID, [Synonimous]]
+
+GeneInfo_map = {}
+
+with open(Gene_info_filename,"r") as fd:
+	for line in fd:
+		content = line.strip().split("\t")
+		
+		print(content)
+		#GeneInfo_map[ENSEMBLid] = [RecName, TaxID, [Synonimous]]
+
+
+
+
 
 # Load ID mapping into dictionary of Tupples (key: UniProt_ID, Values: (NCBI_ID , ENSEBLid)):
+
 IDmap = {}
 with open(IDmap_filename,"r") as fd:
 	for line in fd:
@@ -34,10 +58,7 @@ with open(IDmap_filename,"r") as fd:
 
 		IDmap[content[0]] = (NCBI_ID,ENSEBLid)
 
-# Parse the Sprot_filename file and create the ouptut files
-
-# First create a dictionary that cointains UniProt_ID as key and a list as values:
-	# (NCBI_geneID , Ensembl_geneID, RecName, AltName(s) (sepparated by |), Short Names (sepparated by |, regardless of being alternative or recommended), PFAM_domains_(sepparated by |), sequence)
+# Parse the Sprot_filename and add to dictionary that cointains UniProt_ID as key and a list as values: (NCBI_geneID , Ensembl_geneID, RecName, AltName(s), Short Name (s), PFAM_domain(s), sequence, GO ID (s), GO type(s), GO (name))
 
 UniProt_map = {}	
 seq = ""
@@ -51,7 +72,7 @@ with open(Sprot_filename,"r") as fd:
 		# start a new entry, adding gene_IDs:
 		if line.startswith("ID"):
 			ID = line.split()[1]
-			UniProt_map[ID] = [IDmap[ID][0],IDmap[ID][1],'',[],[],[],'']
+			UniProt_map[ID] = [IDmap[ID][0],IDmap[ID][1],'',[],[],[],'',[],[],[]]
 
 		# add names:
 		if line.startswith("DE"):
@@ -98,12 +119,23 @@ with open(Sprot_filename,"r") as fd:
 		if writing_seq == 1:
 			seq += "".join(line.strip().split())
 
+
+		# add GO information:
+
+		if line.startswith("DR") and line.split()[1]=="GO;":
+
+			GOid = line.split(":")[1].split(";")[0]
+			Type_GO = line.split()[3].split(":")[0]
+			Name_GO = line.split(":")[2].split(";")[0]
+
+			UniProt_map[ID][7].append(GOid)
+			UniProt_map[ID][8].append(Type_GO)
+			UniProt_map[ID][9].append(Name_GO)
+
 		# record the current line for the next run
 		prev_line = line
 
 print(UniProt_map)
-
-
 
 
 
