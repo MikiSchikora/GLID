@@ -5,6 +5,7 @@
 
 DataDir = "../Data/"
 
+print("hola")
 # Process the files with bash
 
 import os
