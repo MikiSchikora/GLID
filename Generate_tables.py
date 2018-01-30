@@ -4,6 +4,7 @@
 # PROGRAM IMPLEMENTATION:
 
 DataDir = "../Data/"
+print("adeu")
 
 # Process the files with bash
 
