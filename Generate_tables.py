@@ -5,7 +5,7 @@
 
 DataDir = "../Data/"
 
-print("hola")
+print("hola me cagon deu")
 # Process the files with bash
 
 import os
