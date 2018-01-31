@@ -22,6 +22,14 @@ os.system("awk -v FS='\\t' -v OFS='\\t' '{print $1,$3,$5,$6}' "+DataDir+"Homo_sa
 IDmap_filename = DataDir+"HUMAN_9606_idmapping_selected_simple.tab"
 Sprot_filename = DataDir+"uniprot_sprot_human.dat"
 Gene_info_filename = DataDir+"Homo_sapiens_simple.gene_info"
+Tax_names_filename = DataDir+"taxdmp/names.dmp"
+Tax_nodes_filename = DataDir+"taxdmp/nodes.dmp"
+Division_filename = DataDir+"taxdmp/division.dmp"
+
+OrthoDB_OG2genes_filename = DataDir+"OrthoDB/odb9v1_OG2genes.tab"
+OrthoDB_genes_filename = DataDir+"OrthoDB/odb9v1_genes.tab"
+OrthoDB_OGnames_filename = DataDir+"OrthoDB/odb9v1_OGs.tab"
+
 
 # define output files:
 
@@ -29,19 +37,62 @@ Gene_info_filename = DataDir+"Homo_sapiens_simple.gene_info"
 #Multifasta_filename = DataDir+"Sprot_human.fa"
 
 
+# Parse the OrthoDB files and create a dictionary that coinatins Key: OG cluster ID and Value: [Cluster_name,[ENSEMBLid(s) that belong to this cluster]]:
+
+	# Create a dictionary that maps ENSEMBLids to OrthoDB gene IDs:
+
+	#OrthoDB
+
+
+
+# Parse the taxonomy names and record a dictionary with (Key: TaxID) a list that has: [Common Name, DivisionID]
+
+Taxonomy_map = {}
+
+with open(Tax_names_filename,"r") as fd:
+	for line in fd:
+		content = " ".join(line.split()).split("|")
+		if content[3] == " scientific name ":
+			TaxID = content[0].strip(" ")
+			Common_name = content[1].lstrip(" ").strip(" ")
+			Taxonomy_map[TaxID] = [Common_name,1000]
+
+	# add the DivisionID from Tax_nodes_filename
+with open(Tax_nodes_filename,"r") as fd:
+	for line in fd:
+		content = " ".join(line.split()).split("|")
+		TaxID = content[0].strip(" ")
+		DivisionID = content[4].lstrip(" ").strip(" ")
+
+		Taxonomy_map[TaxID][1] = int(DivisionID)
+
+# Parse the Division_filename and add to Division_map that cointains Key: DivisionID and Value: Name
+
+Division_map = {}
+
+with open(Division_filename,"r") as fd:
+	for line in fd:
+		content = " ".join(line.split()).split("|")
+		DivisionID = int(content[0].strip(" "))
+		Name = content[2].lstrip(" ").strip(" ")
+		Division_map[DivisionID] = Name
+
 # Parse the Gene_info_filename and record into a dictionary (Key: ENSEMBLid) a list that has [RecName, TaxID, [Synonimous]]
 
 GeneInfo_map = {}
 
 with open(Gene_info_filename,"r") as fd:
 	for line in fd:
-		content = line.strip().split("\t")
 		
-		print(content)
-		#GeneInfo_map[ENSEMBLid] = [RecName, TaxID, [Synonimous]]
+		content = line.strip().split("\t")
+		TaxID = content[0]
+		RecName = content[1]
+		Synonimous = content[2].split("|")
 
-
-
+		IDensembl = content[3].find("Ensembl")
+		ENSEMBLid = content[3][IDensembl+8:IDensembl+8+16].strip("|")
+		
+		GeneInfo_map[ENSEMBLid] = [RecName, TaxID, Synonimous]
 
 
 # Load ID mapping into dictionary of Tupples (key: UniProt_ID, Values: (NCBI_ID , ENSEBLid)):
@@ -51,12 +102,10 @@ with open(IDmap_filename,"r") as fd:
 	for line in fd:
 		content = line.strip("\n").split("\t")
 		NCBI_ID = content[1]
-		ENSEBLid = content[2]
-		if ENSEBLid.find(";") is True:
-			ENSEBLids = ENSEBLid.split(";")
-			ENSEBLid = ENSEBLids[0]
+		ENSEBLid = content[2].split(";")[0].strip()
 
 		IDmap[content[0]] = (NCBI_ID,ENSEBLid)
+
 
 # Parse the Sprot_filename and add to dictionary that cointains UniProt_ID as key and a list as values: (NCBI_geneID , Ensembl_geneID, RecName, AltName(s), Short Name (s), PFAM_domain(s), sequence, GO ID (s), GO type(s), GO (name))
 
@@ -135,7 +184,7 @@ with open(Sprot_filename,"r") as fd:
 		# record the current line for the next run
 		prev_line = line
 
-print(UniProt_map)
+#print(UniProt_map)
 
 
 
