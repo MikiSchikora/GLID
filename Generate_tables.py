@@ -55,7 +55,11 @@ OrthoDB_OGnames_filename = DataDir+"OrthoDB/odb9v1_OGs.tab"
 
 # Homo sapiens, Mus musculus, Bos taurus, Pan troglodytes troglodytes, Gallus gallus, Xenopus laevis laevis, Anelytropsis papillosus (lizard), Danio rerio, Nicotiana tabacum, Saccharomyces cerevisiae, Schizosaccharomyces pombe, Drosophila melanogaster, Caenorhabditis elegans, Escherichia coli, Bacillus subtilis
 
-TaxIDs = set(["9606","10090","30522","37011","208524","443947","405597","7955","4097","4932", "4896","7227","6239","562", "1423"])
+#TaxIDs = set(["9606","10090","30522","37011","208524","443947","405597","7955","4097","4932", "4896","7227","6239","562", "1423"])
+
+# corrected set:
+TaxIDs = set(["9606","10090","30522","37011","208524","443947","405597","7955","4097","559292", "4896","7227","6239","562", "1423"])
+
 
 #TaxIDs = set(["10090","30522","37011","4932", "4896","7227"])
 
@@ -94,10 +98,13 @@ with open(IDmap_filename,"r") as fd:
 		#print(content)
 		#print (content[0].strip(),content[2].split(";")[0].strip())
 
-		if content[0].strip().endswith("_YEAST") is True:
+		if content[0].strip().endswith("_MOUSE") is True:
 
-			print(content)
-			print (content[0].strip(),NCBIid)
+			#print(content)
+			#print (content[0].strip(),NCBI_ID)
+
+			if NCBI_ID in GeneInfo_map_keys:
+				print("Hi")
  
 		if NCBI_ID in GeneInfo_map_keys:
 
