@@ -9,14 +9,13 @@ DataDir = "../Data/"
 
 import os
 
-
 #### HUMAN ####
 
 # #ID mapping file:
 # os.system("awk -v FS='\\t' -v OFS='\\t' '{print $2,$3,$19}' "+DataDir+"HUMAN_9606_idmapping_selected.tab >" +DataDir+"HUMAN_9606_idmapping_selected_simple.tab")
 
 # #Gene info file
-# os.system("awk -v FS='\\t' -v OFS='\\t' '{print $1,$3,$5,$6}' "+DataDir+"Homo_sapiens.gene_info | grep Ensembl >" +DataDir+"Homo_sapiens_simple.gene_info")
+# os.system("awk -v FS='\\t' -v OFS='\\t' '{print $1,$2,$3,$5,$6}' "+DataDir+"Homo_sapiens.gene_info >" +DataDir+"Homo_sapiens_simple.gene_info")
 
 # # define input files:
 
@@ -27,12 +26,12 @@ import os
 #### ALL ####
 
 #ID mapping file:
-os.system("awk -v FS='\\t' -v OFS='\\t' '{print $2,$3,$19}' "+DataDir+"idmapping_selected.tab >" +DataDir+"idmapping_selected_simple.tab")
+#os.system("awk -v FS='\\t' -v OFS='\\t' '{print $2,$3,$19}' "+DataDir+"idmapping_selected.tab >" +DataDir+"idmapping_selected_simple.tab")
 
 print("ID mapping parsed with awk")
 
 #Gene info file
-os.system("awk -v FS='\\t' -v OFS='\\t' '{print $1,$3,$5,$6}' "+DataDir+"gene_info | grep Ensembl >" +DataDir+"gene_info_simple")
+#os.system("awk -v FS='\\t' -v OFS='\\t' '{print $1,$2,$3,$5,$6}' "+DataDir+"gene_info >" +DataDir+"gene_info_simple")
 
 print("Gene info parsed with awk")
 
@@ -41,7 +40,6 @@ print("Gene info parsed with awk")
 IDmap_filename = DataDir+"idmapping_selected_simple.tab"
 Sprot_filename = DataDir+"uniprot_sprot.dat"
 Gene_info_filename = DataDir+"gene_info_simple"
-
 
 
 # common input files
@@ -53,12 +51,22 @@ OrthoDB_OG2genes_filename = DataDir+"OrthoDB/odb9v1_OG2genes.tab"
 OrthoDB_genes_filename = DataDir+"OrthoDB/odb9v1_genes.tab"
 OrthoDB_OGnames_filename = DataDir+"OrthoDB/odb9v1_OGs.tab"
 
+##### DEFINE TAXIDS #####
 
+# Homo sapiens, Mus musculus, Bos taurus, Pan troglodytes troglodytes, Gallus gallus, Xenopus laevis laevis, Anelytropsis papillosus (lizard), Danio rerio, Nicotiana tabacum, Saccharomyces cerevisiae, Schizosaccharomyces pombe, Drosophila melanogaster, Caenorhabditis elegans, Escherichia coli, Bacillus subtilis
+
+#TaxIDs = set(["9606","10090","30522","37011","208524","443947","405597","7955","4097","4932", "4896","7227","6239","562", "1423"])
+
+# corrected set:
+TaxIDs = set(["9606","10090","30522","37011","208524","443947","405597","7955","4097","559292", "4896","7227","6239","562", "1423"])
+
+
+#TaxIDs = set(["10090","30522","37011","4932", "4896","7227"])
 
 
 ##### PARSE STUFF #######
 
-# Parse the Gene_info_filename and record into a dictionary (Key: ENSEMBLid) a list that has [RecName, TaxID, [Synonimous]]
+# Parse the Gene_info_filename and record into a dictionary (Key: NCBIid) a list that has [RecName, TaxID, [Synonimous]]
 
 GeneInfo_map = {}
 
@@ -66,35 +74,65 @@ with open(Gene_info_filename,"r") as fd:
 	for line in fd:
 		
 		content = line.strip().split("\t")
-		TaxID = content[0]
-		RecName = content[1]
-		Synonimous = content[2].split("|")
+		TaxID = content[0].strip()
 
-		IDs_array = content[3].split("|")
+		if TaxID in TaxIDs:
 
-		I = 0
-		for x in IDs_array:
-			if x.startswith("Ensembl:"):
-				ENSEMBLid = IDs_array[I].split(":")[1]
-			I += 1
-		
-		GeneInfo_map[ENSEMBLid] = [RecName, TaxID, Synonimous]
+			NCBIid = content[1].strip()
+			RecName = content[2].strip()
+			Synonimous = content[3].split("|")
+			GeneInfo_map[NCBIid] = [RecName, TaxID, Synonimous]
+
+GeneInfo_map_keys = GeneInfo_map.keys()
 
 print("Gene info parsed")
 
-
-# Load ID mapping into dictionary of Tupples (key: UniProt_ID, Values: (NCBI_ID , ENSEBLid)):
+# Load ID mapping into dictionary of Tupples (key: UniProt_ID, Values: (NCBI_ID , ENSEMBLid)):
 
 IDmap = {}
 with open(IDmap_filename,"r") as fd:
 	for line in fd:
 		content = line.strip("\n").split("\t")
-		NCBI_ID = content[1]
-		ENSEBLid = content[2].split(";")[0].strip()
+		NCBI_ID = content[1].split(";")[0].strip()
 
-		IDmap[content[0]] = (NCBI_ID,ENSEBLid)
+		#print(content)
+		#print (content[0].strip(),content[2].split(";")[0].strip())
+
+		if content[0].strip().endswith("_MOUSE") is True:
+
+			#print(content)
+			#print (content[0].strip(),NCBI_ID)
+
+			if NCBI_ID in GeneInfo_map_keys:
+				print("Hi")
+ 
+		if NCBI_ID in GeneInfo_map_keys:
+
+			Prot_ID = content[0].strip()
+			ENSEMBLid = content[2].split(";")[0].strip()
+
+			#print("Entered",Prot_ID,NCBI_ID)
+
+			IDmap[Prot_ID] = (NCBI_ID,ENSEMBLid)
+
+IDmap_keys = IDmap.keys()
 
 print("ID mapping parsed")
+
+exit(0)
+
+# import pickle
+
+# # obj0, obj1, obj2 are created here...
+
+# # Saving the objects:
+# with open('objs.pkl', 'wb') as f:  # Python 3: open(..., 'wb')
+#     pickle.dump([obj0, obj1, obj2], f)
+
+# # Getting back the objects:
+# with open('objs.pkl','rb') as f:  # Python 3: open(..., 'rb')
+#     obj0, obj1, obj2 = pickle.load(f)
+
 
 # Parse the Sprot_filename and add to dictionary that cointains UniProt_ID as key and a list as values: (NCBI_geneID , Ensembl_geneID, RecName, AltName(s), Short Name (s), PFAM_domain(s), PFAM_domain(s) name(s),sequence, GO ID (s), GO type(s), GO (name))
 
@@ -109,8 +147,22 @@ with open(Sprot_filename,"r") as fd:
 
 		# start a new entry, adding gene_IDs:
 		if line.startswith("ID"):
-			ID = line.split()[1]
-			UniProt_map[ID] = [IDmap[ID][0],IDmap[ID][1],'',[],[],[],[],'',[],[],[]]
+			ID = line.split()[1].strip()
+
+			if ID in IDmap_keys:
+				NCBIid = IDmap[ID][0]
+				UniProt_map[ID] = [NCBIid,IDmap[ID][1],'',[],[],[],[],'',[],[],[]]
+
+			# skip the first line
+			else:
+				NCBIid = ""
+				continue
+
+		else:
+
+			#skip other lines
+			if NCBIid not in GeneInfo_map_keys:
+				continue
 
 		# add names:
 		if line.startswith("DE"):
@@ -150,16 +202,16 @@ with open(Sprot_filename,"r") as fd:
 
 		# add aa sequence:
 
-		if prev_line.startswith("SQ") is True:
-			writing_seq = 1
+		# if prev_line.startswith("SQ") is True:
+		# 	writing_seq = 1
 
-		if line.startswith("//") is True:
-			UniProt_map[ID][7] = seq
-			seq = ""
-			writing_seq = 0
+		# if line.startswith("//") is True:
+		# 	UniProt_map[ID][7] = seq
+		# 	seq = ""
+		# 	writing_seq = 0
 
-		if writing_seq == 1:
-			seq += "".join(line.strip().split())
+		# if writing_seq == 1:
+		# 	seq += "".join(line.strip().split())
 
 
 		# add GO information:
@@ -180,50 +232,6 @@ with open(Sprot_filename,"r") as fd:
 
 print("Sprot parsed")
 
-# Parse the OrthoDB files and create a dictionary that coinatins Key: OG cluster ID and Value: [Cluster_name,[ENSEMBLid(s) that belong to this cluster]]:
-
-# # Create a dictionary that maps ENSEMBLids (values) to OrthoDB gene IDs (keys):
-
-# OrthoDB_genes = {}
-
-# with open(OrthoDB_genes_filename,"r") as fd:
-# 	for line in fd:
-# 		content = line.split("\t")
-# 		if content[4].endswith("\\N") is False:
-# 			OrthoDB_genes[content[0]] = content[4].strip()
-
-
-# # Create a dictionary that maps OG Names (values) to OrthoDB OGs (keys):
-
-# OrthoDB_OGs = {}
-
-# with open(OrthoDB_OGnames_filename,"r") as fd:
-# 	for line in fd:
-# 		content = line.split("\t")
-# 		if content[2].endswith("\\N") is False:
-# 			OrthoDB_OGs[content[0]] = content[2].strip()
-
-# #print(OrthoDB_OGs)
-
-# # Create the final dictionary:
-
-# OrthoDB_map = {}
-
-# with open(OrthoDB_OG2genes_filename,"r") as fd:
-# 	for line in fd:
-# 		content = line.split("\t")
-# 		OG = content[0]
-# 		Ortho_Gene = content[1].strip()
-		
-# 		if OG in OrthoDB_OGs.keys() and Ortho_Gene in OrthoDB_genes.keys():
-			
-# 			OG_name = OrthoDB_OGs[OG]
-# 			ENSEMBLid = OrthoDB_genes[Ortho_Gene]
-# 			OrthoDB_map[OG] = [OG_name,[]]
-# 			OrthoDB_map[OG][1].append(ENSEMBLid)
-
-print("OrthoDB parsed")
-
 # Parse the taxonomy names and record a dictionary with (Key: TaxID) a list that has: [Common Name, DivisionID]
 
 Taxonomy_map = {}
@@ -233,17 +241,23 @@ with open(Tax_names_filename,"r") as fd:
 		content = " ".join(line.split()).split("|")
 		if content[3] == " scientific name ":
 			TaxID = content[0].strip(" ")
-			Common_name = content[1].lstrip(" ").strip(" ")
-			Taxonomy_map[TaxID] = [Common_name,1000]
 
-	# add the DivisionID from Tax_nodes_filename
+			if TaxID in TaxIDs:
+				Common_name = content[1].lstrip(" ").strip(" ")
+				Taxonomy_map[TaxID] = [Common_name,1000]
+
+Taxonomy_map_keys = Taxonomy_map.keys()
+
+# add the DivisionID from Tax_nodes_filename
 with open(Tax_nodes_filename,"r") as fd:
 	for line in fd:
 		content = " ".join(line.split()).split("|")
 		TaxID = content[0].strip(" ")
-		DivisionID = content[4].lstrip(" ").strip(" ")
 
-		Taxonomy_map[TaxID][1] = DivisionID
+		if TaxID in Taxonomy_map_keys:
+
+			DivisionID = content[4].lstrip(" ").strip(" ")	
+			Taxonomy_map[TaxID][1] = DivisionID
 
 # Parse the Division_filename and add to Division_map that cointains Key: DivisionID and Value: Name
 
@@ -259,6 +273,57 @@ with open(Division_filename,"r") as fd:
 print("Taxonomy parsed")
 
 
+# Parse the OrthoDB files and create a dictionary that coinatins Key: OG cluster ID and Value: [Cluster_name,[NCBIid(s) that belong to this cluster]]:
+
+# Create a dictionary that maps NCBIids (values) to OrthoDB gene IDs (keys):
+
+OrthoDB_genes = {}
+
+with open(OrthoDB_genes_filename,"r") as fd:
+	for line in fd:
+		content = line.split("\t")
+		NCBIid = content[5].strip()
+
+		if NCBIid.endswith("\\N") is False and NCBIid in GeneInfo_map_keys:
+			OrthoDB_genes[content[0].strip()] = NCBIid
+
+print ("OrthoDB_genes created")
+
+# Create a dictionary that maps OG Names (values) to OrthoDB OGs (keys):
+
+OrthoDB_OGs = {}
+
+with open(OrthoDB_OGnames_filename,"r") as fd:
+	for line in fd:
+		content = line.split("\t")
+		Name = content[2].strip()
+
+		if Name.endswith("\\N") is False:
+			OrthoDB_OGs[content[0].strip()] = Name
+
+print ("OrthoDB_OGs created")
+
+# Create the final dictionary:
+
+OrthoDB_map = {}
+
+with open(OrthoDB_OG2genes_filename,"r") as fd:
+	for line in fd:
+		content = line.split("\t")
+		OG = content[0].strip()
+		Ortho_Gene = content[1].strip()
+		
+		if OG in OrthoDB_OGs.keys() and Ortho_Gene in OrthoDB_genes.keys():
+
+			OG_name = OrthoDB_OGs[OG]
+			NCBIid = OrthoDB_genes[Ortho_Gene]
+
+			if OG in OrthoDB_map.keys():
+				OrthoDB_map[OG][1].append(NCBIid)
+			else:
+				OrthoDB_map[OG] = [OG_name,[NCBIid]]
+
+print("OrthoDB parsed")
 
 
 
@@ -272,18 +337,19 @@ print("Printing")
 
 #### Gene ####
 
-Gene_input = "id_ENSEMBL;gene_recommended_name;tax_id\n"
+Gene_input = "id_NCBI;gene_recommended_name;tax_id\n"
 
-for ENSEMBLid in GeneInfo_map:
+for NCBIid in GeneInfo_map:
 
 	# The tax id has to be in Taxonomy_map
-	if GeneInfo_map[ENSEMBLid][1] in Taxonomy_map.keys():
-		Gene_input += ENSEMBLid+";"+GeneInfo_map[ENSEMBLid][0]+";"+GeneInfo_map[ENSEMBLid][1]+"\n"
+	if GeneInfo_map[NCBIid][1] in Taxonomy_map.keys():
+		Gene_input += NCBIid+";"+GeneInfo_map[NCBIid][0]+";"+GeneInfo_map[NCBIid][1]+"\n"
 
 fd = open("./Tables/Gene.tbl","w")
 fd.write(Gene_input)
 fd.close()
 
+print("Gene printed")
 
 #### Species ####
 
@@ -299,6 +365,7 @@ fd = open("./Tables/Species.tbl","w")
 fd.write(Species_input)
 fd.close()
 
+print("Species printed")
 
 #### Taxonomy ####
 
@@ -311,34 +378,37 @@ fd = open("./Tables/Taxonomy.tbl","w")
 fd.write(Taxonomy_input)
 fd.close()
 
+print("Taxonomy printed")
 
 #### GeneSynonyms ####
 
-GeneSynonyms_input = "id_genesynonym;id_ENSEMBL;name_genesynonym\n"
+GeneSynonyms_input = "id_genesynonym;id_NCBI;name_genesynonym\n"
 
-for ENSEMBLid in GeneInfo_map:
-	Synonyms = GeneInfo_map[ENSEMBLid][2]
+for NCBIid in GeneInfo_map:
+	Synonyms = GeneInfo_map[NCBIid][2]
 
 	#chech that there are synonyms
 	if len(Synonyms[0])>1:
 		for Syn in Synonyms:
-			GeneSynonyms_input += ENSEMBLid+"_"+Syn+";"+ENSEMBLid+";"+Syn+"\n"
+			GeneSynonyms_input += NCBIid+"_"+Syn+";"+NCBIid+";"+Syn+"\n"
 
 fd = open("./Tables/GeneSynonyms.tbl","w")
 fd.write(GeneSynonyms_input)
 fd.close()
 
+print("GeneSynonyms printed")
+
 #### Proteins , ProteinSynonyms , Pfam ####
 
-Proteins_input = "id_Uniprot;id_ENSEMBL;protein_recommended_name;id_pfam\n"
+Proteins_input = "id_Uniprot;id_NCBI;protein_recommended_name;id_pfam\n"
 ProteinSynonyms_input = "id_proteinsynonyms;id_Uniprot;name_proteinsynonym\n"
 Pfam_input = "id_pfam;name_pfam\n"
 
 for ID in UniProt_map:
 	Content = UniProt_map[ID]
 
-	#check that it has an Ensembl_ID
-	if len(Content[1])>1:
+	#check that it has an NCBI_ID
+	if len(Content[0])>1:
 
 		PfamID = "|".join(Content[5])
 		PfamNames = "|".join(Content[6])
@@ -346,7 +416,7 @@ for ID in UniProt_map:
 		#check that PfamID is not empty
 		if len(PfamID)>1:
 
-			Proteins_input += ID+";"+Content[1]+";"+Content[2]+";"+PfamID+"\n"
+			Proteins_input += ID+";"+Content[0]+";"+Content[2]+";"+PfamID+"\n"
 
 			# Add to Pfam_input, just if it is not already there
 			if Pfam_input.find(PfamID)<0:
@@ -375,9 +445,38 @@ fd = open("./Tables/ProteinSynonyms.tbl","w")
 fd.write(ProteinSynonyms_input)
 fd.close()
 
-#(NCBI_geneID , Ensembl_geneID, RecName, AltName(s), Short Name (s), PFAM_domain(s), PFAM_domain(s) name(s),sequence, GO ID (s), GO type(s), GO (name))
+print("Proteins , ProteinSynonyms , Pfam printed")
+
+#### OrthologueCluster and Gene_has_OrthologueCluster
+
+OrthologueCluster_input = "ortho_cluster;name_cluster\n"
+Gene_has_OrthologueCluster_input = "Gene_id_NCBI;OrthologueCluster_ortho_cluster\n"
+
+for OG in OrthoDB_map:
+
+	Name = OrthoDB_map[OG][0]
+	NCBIids = OrthoDB_map[OG][1]
+
+	for NCBIid in NCBIids:
+		#check that we have the NCBIid in our other primary key
+		if NCBIid in GeneInfo_map.keys():
+
+			# Add to OrthologueCluster_input if it does not exist there
+			if OrthologueCluster_input.find(OG)<0:
+				OrthologueCluster_input += OG+";"+Name+"\n"
+
+			# Add to Gene_has_OrthologueCluster_input
+			Gene_has_OrthologueCluster_input += NCBIid+";"+OG+"\n"
 
 
+fd = open("./Tables/OrthologueCluster.tbl","w")
+fd.write(OrthologueCluster_input)
+fd.close()
+
+fd = open("./Tables/Gene_has_OrthologueCluster.tbl","w")
+fd.write(Gene_has_OrthologueCluster_input)
+fd.close()
 
 
+print("OrthologueCluster and Gene_has_OrthologueCluster printed")
 

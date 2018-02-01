@@ -1,0 +1,16 @@
+tax_id;common_name;division_id
+562;Escherichia coli;0
+1423;Bacillus subtilis;0
+4097;Nicotiana tabacum;4
+4896;Schizosaccharomyces pombe;4
+4932;Saccharomyces cerevisiae;4
+6239;Caenorhabditis elegans;1
+7227;Drosophila melanogaster;1
+7955;Danio rerio;10
+9606;Homo sapiens;5
+10090;Mus musculus;6
+30522;Bos indicus x Bos taurus;2
+37011;Pan troglodytes troglodytes;5
+208524;Gallus gallus spadiceus;10
+405597;Anelytropsis papillosus;10
+443947;Xenopus laevis laevis;10
