@@ -53,12 +53,14 @@ OrthoDB_OGnames_filename = DataDir+"OrthoDB/odb9v1_OGs.tab"
 
 ##### DEFINE TAXIDS #####
 
-# Homo sapiens, Mus musculus, Bos taurus, Pan troglodytes troglodytes, Gallus gallus, Xenopus laevis laevis, Anelytropsis papillosus (lizard), Danio rerio, Nicotiana tabacum, Saccharomyces cerevisiae, Schizosaccharomyces pombe, Drosophila melanogaster, Caenorhabditis elegans, Escherichia coli, Bacillus subtilis
+# Homo sapiens, Mus musculus, Bos taurus, Pan troglodytes, Gallus gallus, Xenopus laevis, Danio rerio, Nicotiana tabacum, Saccharomyces cerevisiae, Schizosaccharomyces pombe, Drosophila melanogaster, Caenorhabditis elegans, Escherichia coli, Bacillus subtilis
 
-#TaxIDs = set(["9606","10090","30522","37011","208524","443947","405597","7955","4097","4932", "4896","7227","6239","562", "1423"])
 
 # corrected set:
-TaxIDs = set(["9606","10090","30522","37011","208524","443947","405597","7955","4097","559292", "4896","7227","6239","562", "1423"])
+
+# Until Pan troglodytes
+
+TaxIDs = set(["9606","10090","9913","9598","9031","8355","7955","4097","559292", "284812","7227","6239","83333", "224308"])
 
 
 #TaxIDs = set(["10090","30522","37011","4932", "4896","7227"])
@@ -94,32 +96,17 @@ with open(IDmap_filename,"r") as fd:
 	for line in fd:
 		content = line.strip("\n").split("\t")
 		NCBI_ID = content[1].split(";")[0].strip()
-
-		#print(content)
-		#print (content[0].strip(),content[2].split(";")[0].strip())
-
-		if content[0].strip().endswith("_MOUSE") is True:
-
-			#print(content)
-			#print (content[0].strip(),NCBI_ID)
-
-			if NCBI_ID in GeneInfo_map_keys:
-				print("Hi")
  
 		if NCBI_ID in GeneInfo_map_keys:
 
 			Prot_ID = content[0].strip()
 			ENSEMBLid = content[2].split(";")[0].strip()
 
-			#print("Entered",Prot_ID,NCBI_ID)
-
 			IDmap[Prot_ID] = (NCBI_ID,ENSEMBLid)
 
 IDmap_keys = IDmap.keys()
 
 print("ID mapping parsed")
-
-exit(0)
 
 # import pickle
 
@@ -230,7 +217,7 @@ with open(Sprot_filename,"r") as fd:
 		prev_line = line
 
 
-print("Sprot parsed")
+print("Sprot parsed, it has "+str(len(UniProt_map.keys()))+" Entries")
 
 # Parse the taxonomy names and record a dictionary with (Key: TaxID) a list that has: [Common Name, DivisionID]
 
@@ -345,7 +332,7 @@ for NCBIid in GeneInfo_map:
 	if GeneInfo_map[NCBIid][1] in Taxonomy_map.keys():
 		Gene_input += NCBIid+";"+GeneInfo_map[NCBIid][0]+";"+GeneInfo_map[NCBIid][1]+"\n"
 
-fd = open("./Tables/Gene.tbl","w")
+fd = open("./Tables/Gene.csv","w")
 fd.write(Gene_input)
 fd.close()
 
@@ -361,7 +348,7 @@ for TaxID in Taxonomy_map:
 	if Taxonomy_map[TaxID][1] in Division_map.keys():
 		Species_input += TaxID+";"+Taxonomy_map[TaxID][0]+";"+Taxonomy_map[TaxID][1]+"\n"
 
-fd = open("./Tables/Species.tbl","w")
+fd = open("./Tables/Species.csv","w")
 fd.write(Species_input)
 fd.close()
 
@@ -374,7 +361,7 @@ Taxonomy_input = "division_id;name_taxonomy\n"
 for DivisionID in Division_map:
 	Taxonomy_input += DivisionID+";"+Division_map[DivisionID]+"\n"
 
-fd = open("./Tables/Taxonomy.tbl","w")
+fd = open("./Tables/Taxonomy.csv","w")
 fd.write(Taxonomy_input)
 fd.close()
 
@@ -392,7 +379,7 @@ for NCBIid in GeneInfo_map:
 		for Syn in Synonyms:
 			GeneSynonyms_input += NCBIid+"_"+Syn+";"+NCBIid+";"+Syn+"\n"
 
-fd = open("./Tables/GeneSynonyms.tbl","w")
+fd = open("./Tables/GeneSynonyms.csv","w")
 fd.write(GeneSynonyms_input)
 fd.close()
 
@@ -433,15 +420,15 @@ for ID in UniProt_map:
 						ProteinSynonyms_input += ID+"_"+Syn+";"+ID+";"+Syn+"\n"
 	
 
-fd = open("./Tables/Proteins.tbl","w")
+fd = open("./Tables/Proteins.csv","w")
 fd.write(Proteins_input)
 fd.close()
 
-fd = open("./Tables/Pfam.tbl","w")
+fd = open("./Tables/Pfam.csv","w")
 fd.write(Pfam_input)
 fd.close()
 
-fd = open("./Tables/ProteinSynonyms.tbl","w")
+fd = open("./Tables/ProteinSynonyms.csv","w")
 fd.write(ProteinSynonyms_input)
 fd.close()
 
@@ -469,11 +456,11 @@ for OG in OrthoDB_map:
 			Gene_has_OrthologueCluster_input += NCBIid+";"+OG+"\n"
 
 
-fd = open("./Tables/OrthologueCluster.tbl","w")
+fd = open("./Tables/OrthologueCluster.csv","w")
 fd.write(OrthologueCluster_input)
 fd.close()
 
-fd = open("./Tables/Gene_has_OrthologueCluster.tbl","w")
+fd = open("./Tables/Gene_has_OrthologueCluster.csv","w")
 fd.write(Gene_has_OrthologueCluster_input)
 fd.close()
 
