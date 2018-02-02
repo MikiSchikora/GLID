@@ -86,3 +86,7 @@ mysql> SELECT * FROM GeneSynonyms WHERE id_genesynonym = "39619_DMELCG5185"
 +------------------+---------------+------------------+
 1 row in set (0.01 sec)
 
+### .dump
+
+$ mysqldump -uroot -pAstrolabi04069400  --databases glid > dump.sql
+
