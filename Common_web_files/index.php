@@ -1,5 +1,5 @@
-<!DOCTYPE html>
 <?php
+//<!DOCTYPE html> may be put in the first row
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
@@ -10,6 +10,17 @@ if (isset($_REQUEST['new']) or ! isset($_SESSION['queryData'])){
         'query' => ''
     ];
 }
+
+//////////////////
+//////////////////
+//////////////////
+//////////////////
+// HEEEEEEEEEEEYYYYYYYY
+// YOU HAVE TO EDIT THE action="search_Synonims.php" EACH TIME
+//////////////////
+//////////////////
+//////////////////
+//////////////////
 
 print headerDBW("Home - GLID project");
 
@@ -40,7 +51,7 @@ print headerDBW("Home - GLID project");
 
       <h1 class="text-center">GLID: Gene to Literature Integrative Database</h1>
 
-      <form name="MainForm" id="mainform-id" autocomplete="off" action="search.php" method="POST" enctype="multipart/form-data" class="margin-top">
+      <form name="MainForm" id="mainform-id" autocomplete="off" action="search_Synonims.php" method="POST" enctype="multipart/form-data" class="margin-top">
       <div class="form-group">
         <label>Enter your query</label>
         <input type="text" class="form-control" id="query" name="myQuery" value="" required placeholder="Write here a gene/protein name, UniProt ID or ENTREZGENE ID (CDK2, cyclin dependent kinase 2, CDK2_HUMAN, 8246 ...)" > <!-- value="<?php //print $_SESSION['queryData']['query'] ?>" -->
@@ -50,35 +61,35 @@ print headerDBW("Home - GLID project");
       <h2>What do you want to search?</h2>
 
        <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+        <input class="form-check-input" type="checkbox" value="" id="RecName" name="RecName">
          <label class="form-check-label" for="defaultCheck1">
          Recommended gene/protein name
          </label>
        </div>
 
        <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+        <input class="form-check-input" type="checkbox" value="" id="Synonyms" name="Synonyms">
          <label class="form-check-label" for="defaultCheck1">
          Synonyms
          </label>
        </div>
 
        <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+        <input class="form-check-input" type="checkbox" value="" id="Orthologues" name="Orthologues">
          <label class="form-check-label" for="defaultCheck1">
          Orthologues
          </label>
        </div>
 
        <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+        <input class="form-check-input" type="checkbox" value="" id="Pfam" name="Pfam">
          <label class="form-check-label" for="defaultCheck1">
          Similar proteins (same PFAM domains)
          </label>
        </div>
 
        <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+        <input class="form-check-input" type="checkbox" value="" id="GO" name="GO">
          <label class="form-check-label" for="defaultCheck1">
          Similar function (Gene Ontology)
          </label>
