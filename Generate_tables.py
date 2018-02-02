@@ -3,7 +3,7 @@
 
 # PROGRAM IMPLEMENTATION:
 
-DataDir = "../Data/"
+DataDir = "../DBW project/Data/"
 
 # Define imput files
 
@@ -82,7 +82,7 @@ with open(Gene_info_filename,"r") as fd:
 
 			NCBIid = content[1].strip()
 			RecName = content[2].strip()
-			Synonimous = content[3].split("|")
+			Synonimous = list(set(content[3].upper().split("|")))
 			GeneInfo_map[NCBIid] = [RecName, TaxID, Synonimous]
 
 GeneInfo_map_keys = GeneInfo_map.keys()
@@ -167,16 +167,20 @@ with open(Sprot_filename,"r") as fd:
 				AltName_info = line.split()[2:]
 				if AltName_info[-1].startswith('{') is True:
 					AltName_info.pop()
-				AltName = " ".join(AltName_info).split("=")[1].split(";")[0]
-				UniProt_map[ID][3].append(AltName)
+				AltName = " ".join(AltName_info).split("=")[1].split(";")[0].upper()
+				
+				if AltName not in UniProt_map[ID][3]:
+					UniProt_map[ID][3].append(AltName)
 
 			# ShortName(s), in the form of a list that will be joined below:
 			if line.split()[1].startswith("Short="):
 				ShortName_info = line.split()[1:]
 				if ShortName_info[-1].startswith('{') is True:
 					ShortName_info.pop()
-				ShortName = " ".join(ShortName_info).split("=")[1].split(";")[0]
-				UniProt_map[ID][4].append(ShortName)
+				ShortName = " ".join(ShortName_info).split("=")[1].split(";")[0].upper()
+				
+				if ShortName not in UniProt_map[ID][4]:
+					UniProt_map[ID][4].append(ShortName)
 
 		# add Pfam domain IDs and names:
 		if line.startswith("DR") and line.split()[1]=="Pfam;":
@@ -306,9 +310,10 @@ with open(OrthoDB_OG2genes_filename,"r") as fd:
 			NCBIid = OrthoDB_genes[Ortho_Gene]
 
 			if OG in OrthoDB_map.keys():
-				OrthoDB_map[OG][1].append(NCBIid)
+
+				OrthoDB_map[OG][1].add(NCBIid)
 			else:
-				OrthoDB_map[OG] = [OG_name,[NCBIid]]
+				OrthoDB_map[OG] = [OG_name,set(NCBIid)]
 
 print("OrthoDB parsed")
 
