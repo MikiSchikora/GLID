@@ -324,15 +324,15 @@ print("Printing")
 
 #### Gene ####
 
-Gene_input = "id_NCBI;gene_recommended_name;tax_id\n"
+Gene_input = "id_NCBI\tgene_recommended_name\ttax_id\n"
 
 for NCBIid in GeneInfo_map:
 
 	# The tax id has to be in Taxonomy_map
 	if GeneInfo_map[NCBIid][1] in Taxonomy_map.keys():
-		Gene_input += NCBIid+";"+GeneInfo_map[NCBIid][0]+";"+GeneInfo_map[NCBIid][1]+"\n"
+		Gene_input += NCBIid+"\t"+GeneInfo_map[NCBIid][0]+"\t"+GeneInfo_map[NCBIid][1]+"\n"
 
-fd = open("./Tables/Gene.csv","w")
+fd = open("./Tables/Gene.tbl","w")
 fd.write(Gene_input)
 fd.close()
 
@@ -340,15 +340,15 @@ print("Gene printed")
 
 #### Species ####
 
-Species_input = "tax_id;common_name;division_id\n"
+Species_input = "tax_id\tcommon_name\tdivision_id\n"
 
 for TaxID in Taxonomy_map:
 
 	# The division ID has to be in Division_map
 	if Taxonomy_map[TaxID][1] in Division_map.keys():
-		Species_input += TaxID+";"+Taxonomy_map[TaxID][0]+";"+Taxonomy_map[TaxID][1]+"\n"
+		Species_input += TaxID+"\t"+Taxonomy_map[TaxID][0]+"\t"+Taxonomy_map[TaxID][1]+"\n"
 
-fd = open("./Tables/Species.csv","w")
+fd = open("./Tables/Species.tbl","w")
 fd.write(Species_input)
 fd.close()
 
@@ -356,12 +356,12 @@ print("Species printed")
 
 #### Taxonomy ####
 
-Taxonomy_input = "division_id;name_taxonomy\n"
+Taxonomy_input = "division_id\tname_taxonomy\n"
 
 for DivisionID in Division_map:
-	Taxonomy_input += DivisionID+";"+Division_map[DivisionID]+"\n"
+	Taxonomy_input += DivisionID+"\t"+Division_map[DivisionID]+"\n"
 
-fd = open("./Tables/Taxonomy.csv","w")
+fd = open("./Tables/Taxonomy.tbl","w")
 fd.write(Taxonomy_input)
 fd.close()
 
@@ -369,7 +369,7 @@ print("Taxonomy printed")
 
 #### GeneSynonyms ####
 
-GeneSynonyms_input = "id_genesynonym;id_NCBI;name_genesynonym\n"
+GeneSynonyms_input = "id_genesynonym\tid_NCBI\tname_genesynonym\n"
 
 for NCBIid in GeneInfo_map:
 	Synonyms = GeneInfo_map[NCBIid][2]
@@ -377,9 +377,9 @@ for NCBIid in GeneInfo_map:
 	#chech that there are synonyms
 	if len(Synonyms[0])>1:
 		for Syn in Synonyms:
-			GeneSynonyms_input += NCBIid+"_"+Syn+";"+NCBIid+";"+Syn+"\n"
+			GeneSynonyms_input += NCBIid+"_"+Syn+"\t"+NCBIid+"\t"+Syn+"\n"
 
-fd = open("./Tables/GeneSynonyms.csv","w")
+fd = open("./Tables/GeneSynonyms.tbl","w")
 fd.write(GeneSynonyms_input)
 fd.close()
 
@@ -387,9 +387,9 @@ print("GeneSynonyms printed")
 
 #### Proteins , ProteinSynonyms , Pfam ####
 
-Proteins_input = "id_Uniprot;id_NCBI;protein_recommended_name;id_pfam\n"
-ProteinSynonyms_input = "id_proteinsynonyms;id_Uniprot;name_proteinsynonym\n"
-Pfam_input = "id_pfam;name_pfam\n"
+Proteins_input = "id_Uniprot\tid_NCBI\tprotein_recommended_name\tid_pfam\n"
+ProteinSynonyms_input = "id_proteinsynonyms\tid_Uniprot\tname_proteinsynonym\n"
+Pfam_input = "id_pfam\tname_pfam\n"
 
 for ID in UniProt_map:
 	Content = UniProt_map[ID]
