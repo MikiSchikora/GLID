@@ -19,3 +19,33 @@ $ less Gene.csv -> search for example "X)1Ct" ??
 16389;Is(In7;X)1Ct;10090
 -> separate fields by tab!
 
+### Tables ###
+** Some tables have duplicate PK -> remove them:
+$ sed 1d ProteinSynonyms.tbl | sort | uniq -i > nh_ProteinSynonyms.tbl #this new table has no header
+
+1) ProteinSynonyms.tbl -> nh_ProteinSynonyms.tbl
+$ wc -l ProteinSynonyms.tbl
+  110651 ProteinSynonyms.tbl
+
+-> if importing to MySQL say 3 repeated PK, so if we remove them (3) + header (1):
+
+$ wc -l nh_ProteinSynonyms.tbl
+  110647 nh_ProteinSynonyms.tbl 
+
+2) Gene_has_OrthologueCluster.tbl
+$ wc -l Gene_has_OrthologueCluster.tbl
+   46131 Gene_has_OrthologueCluster.tbl
+
+$ wc -l nh_Gene_has_OrthologueCluster.tbl
+   45631 nh_Gene_has_OrthologueCluster.tbl
+
+** GeneSynonyms.tbl ?
+
+$ wc -l GeneSynonyms.tbl
+  328748 GeneSynonyms.tbl
+
+$ wc -l nh_GeneSynonyms.tbl
+  326815 nh_GeneSynonyms.tbl
+
+-> uniq_GeneSynonyms.tbl (with .upper() in script)
+
