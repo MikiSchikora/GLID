@@ -403,12 +403,12 @@ for ID in UniProt_map:
 		#check that PfamID is not empty
 		if len(PfamID)>1:
 
-			Proteins_input += ID+";"+Content[0]+";"+Content[2]+";"+PfamID+"\n"
+			Proteins_input += ID+"\t"+Content[0]+"\t"+Content[2]+"\t"+PfamID+"\n"
 
 			# Add to Pfam_input, just if it is not already there
 			if Pfam_input.find(PfamID)<0:
 
-				Pfam_input += PfamID+";"+PfamNames+"\n"
+				Pfam_input += PfamID+"\t"+PfamNames+"\n"
 
 			# add ProteinSynonyms (AltName(s) and Short Name (s))
 
@@ -417,18 +417,18 @@ for ID in UniProt_map:
 			if len(Synonyms)>0:
 				if len(Synonyms[0])>1:
 					for Syn in Synonyms:
-						ProteinSynonyms_input += ID+"_"+Syn+";"+ID+";"+Syn+"\n"
+						ProteinSynonyms_input += ID+"_"+Syn+"\t"+ID+"\t"+Syn+"\n"
 	
 
-fd = open("./Tables/Proteins.csv","w")
+fd = open("./Tables/Proteins.tbl","w")
 fd.write(Proteins_input)
 fd.close()
 
-fd = open("./Tables/Pfam.csv","w")
+fd = open("./Tables/Pfam.tbl","w")
 fd.write(Pfam_input)
 fd.close()
 
-fd = open("./Tables/ProteinSynonyms.csv","w")
+fd = open("./Tables/ProteinSynonyms.tbl","w")
 fd.write(ProteinSynonyms_input)
 fd.close()
 
@@ -436,8 +436,8 @@ print("Proteins , ProteinSynonyms , Pfam printed")
 
 #### OrthologueCluster and Gene_has_OrthologueCluster
 
-OrthologueCluster_input = "ortho_cluster;name_cluster\n"
-Gene_has_OrthologueCluster_input = "Gene_id_NCBI;OrthologueCluster_ortho_cluster\n"
+OrthologueCluster_input = "ortho_cluster\tname_cluster\n"
+Gene_has_OrthologueCluster_input = "Gene_id_NCBI\tOrthologueCluster_ortho_cluster\n"
 
 for OG in OrthoDB_map:
 
@@ -450,17 +450,17 @@ for OG in OrthoDB_map:
 
 			# Add to OrthologueCluster_input if it does not exist there
 			if OrthologueCluster_input.find(OG)<0:
-				OrthologueCluster_input += OG+";"+Name+"\n"
+				OrthologueCluster_input += OG+"\t"+Name+"\n"
 
 			# Add to Gene_has_OrthologueCluster_input
-			Gene_has_OrthologueCluster_input += NCBIid+";"+OG+"\n"
+			Gene_has_OrthologueCluster_input += NCBIid+"\t"+OG+"\n"
 
 
-fd = open("./Tables/OrthologueCluster.csv","w")
+fd = open("./Tables/OrthologueCluster.tbl","w")
 fd.write(OrthologueCluster_input)
 fd.close()
 
-fd = open("./Tables/Gene_has_OrthologueCluster.csv","w")
+fd = open("./Tables/Gene_has_OrthologueCluster.tbl","w")
 fd.write(Gene_has_OrthologueCluster_input)
 fd.close()
 
