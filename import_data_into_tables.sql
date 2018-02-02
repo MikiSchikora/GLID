@@ -15,7 +15,6 @@ FIELDS TERMINATED BY '\t'
 LINES TERMINATED BY '\n'
 IGNORE 1 ROWS;
 
-
 -- Species
 LOAD DATA LOCAL INFILE '/Users/Aida/Documents/Bioinformatics_Master/2nd_TERM/DBW/project/GLID_copy/Tables/Species.tbl'
 INTO TABLE Species
@@ -30,11 +29,6 @@ INTO TABLE Pfam
 FIELDS TERMINATED BY '\t'
 LINES TERMINATED BY '\n'
 IGNORE 1 ROWS;
-
-DESCRIBE Pfam;
-
-
-SELECT * FROM Pfam limit 10;
 
 -- Gene 
 -- 
@@ -55,25 +49,35 @@ IGNORE 1 ROWS;
 
 SET FOREIGN_KEY_CHECKS=1
 
+-- OrthologueCluster
+LOAD DATA LOCAL INFILE '/Users/Aida/Documents/Bioinformatics_Master/2nd_TERM/DBW/project/GLID_copy/Tables/OrthologueCluster.tbl'
+INTO TABLE OrthologueCluster
+FIELDS TERMINATED BY '\t'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS;
+
+
 -- GeneSynonyms (no header)
 -- SET FOREIGN_KEY_CHECKS=0; 
 
-LOAD DATA LOCAL INFILE '/Users/Aida/Documents/Bioinformatics_Master/2nd_TERM/DBW/project/GLID_copy/Tables/nh_GeneSynonyms.tbl'
+LOAD DATA LOCAL INFILE '/Users/Aida/Documents/Bioinformatics_Master/2nd_TERM/DBW/project/GLID_copy/Tables/uniq_GeneSynonyms.tbl'
 INTO TABLE GeneSynonyms
 FIELDS TERMINATED BY '\t'
 LINES TERMINATED BY '\n'
-;
+IGNORE 1 ROWS;
 
 -- SET FOREIGN_KEY_CHECKS=1;
 -- 
--- ProteinSynonyms (no header)
+
+
+-- ProteinSynonyms 
 -- SET FOREIGN_KEY_CHECKS=0; 
 
-LOAD DATA LOCAL INFILE '/Users/Aida/Documents/Bioinformatics_Master/2nd_TERM/DBW/project/GLID_copy/Tables/nh_ProteinSynonyms.tbl'
+LOAD DATA LOCAL INFILE '/Users/Aida/Documents/Bioinformatics_Master/2nd_TERM/DBW/project/GLID_copy/Tables/uniq_ProteinSynonyms.tbl'
 INTO TABLE ProteinSynonyms
 FIELDS TERMINATED BY '\t'
 LINES TERMINATED BY '\n'
-;
+IGNORE 1 ROWS;
 
 -- SET FOREIGN_KEY_CHECKS=1;
 
@@ -84,12 +88,12 @@ FIELDS TERMINATED BY '\t'
 LINES TERMINATED BY '\n'
 ;
 
--- OrthologueCluster
-LOAD DATA LOCAL INFILE '/Users/Aida/Documents/Bioinformatics_Master/2nd_TERM/DBW/project/GLID_copy/Tables/OrthologueCluster.tbl'
-INTO TABLE OrthologueCluster
+LOAD DATA LOCAL INFILE '/Users/Aida/Documents/Bioinformatics_Master/2nd_TERM/DBW/project/GLID_copy/Tables/uniq_Gene_has_OrthologueCluster.tbl'
+INTO TABLE Gene_has_OrthologueCluster
 FIELDS TERMINATED BY '\t'
 LINES TERMINATED BY '\n'
 IGNORE 1 ROWS;
+
 
 
 

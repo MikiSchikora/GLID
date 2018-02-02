@@ -49,3 +49,40 @@ $ wc -l nh_GeneSynonyms.tbl
 
 -> uniq_GeneSynonyms.tbl (with .upper() in script)
 
+mysql> LOAD DATA LOCAL INFILE '/Users/Aida/Documents/Bioinformatics_Master/2nd_TERM/DBW/project/GLID_copy/Tables/uniq_GeneSynonyms.tbl'
+    -> INTO TABLE GeneSynonyms
+    -> FIELDS TERMINATED BY '\t'
+    -> LINES TERMINATED BY '\n'
+    -> IGNORE 1 ROWS;
+Query OK, 322677 rows affected, 13 warnings (6.43 sec)
+Records: 322690  Deleted: 0  Skipped: 13  Warnings: 13
+
+mysql> SHOW WARNINGS;
++---------+------+-------------------------------------------------------+
+| Level   | Code | Message                                               |
++---------+------+-------------------------------------------------------+
+| Warning | 1062 | Duplicate entry '39619_DMELCG5185' for key 'PRIMARY'  |
+| Warning | 1062 | Duplicate entry '39620_DMELCG3096' for key 'PRIMARY'  |
+| Warning | 1062 | Duplicate entry '39621_DMELCG3396' for key 'PRIMARY'  |
+| Warning | 1062 | Duplicate entry '42473_DMELCG3822' for key 'PRIMARY'  |
+| Warning | 1062 | Duplicate entry '42476_DMELCG5621' for key 'PRIMARY'  |
+| Warning | 1062 | Duplicate entry '43153_DMELCG8337' for key 'PRIMARY'  |
+| Warning | 1062 | Duplicate entry '43155_DMELCG6104' for key 'PRIMARY'  |
+| Warning | 1062 | Duplicate entry '43157_DMELCG6099' for key 'PRIMARY'  |
+| Warning | 1062 | Duplicate entry '43159_DMELCG8354' for key 'PRIMARY'  |
+| Warning | 1062 | Duplicate entry '43806_DMELCG9935' for key 'PRIMARY'  |
+| Warning | 1062 | Duplicate entry '43822_DMELCG11155' for key 'PRIMARY' |
+| Warning | 1062 | Duplicate entry '246671_DMELOBP57D' for key 'PRIMARY' |
+| Warning | 1062 | Duplicate entry '326110_DMELOBP57E' for key 'PRIMARY' |
++---------+------+-------------------------------------------------------+
+13 rows in set (0.00 sec)
+
+mysql> SELECT * FROM GeneSynonyms WHERE id_genesynonym = "39619_DMELCG5185"
+    -> ;
++------------------+---------------+------------------+
+| id_genesynonym   | id_ENTREZGENE | name_genesynonym |
++------------------+---------------+------------------+
+| 39619_DMELCG5185 | 39619         | DMELCG5185       |
++------------------+---------------+------------------+
+1 row in set (0.01 sec)
+
