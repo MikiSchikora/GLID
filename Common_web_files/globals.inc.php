@@ -23,7 +23,7 @@ $incDir = "$baseDir/include";
 
 // Load accessory routines
 include_once "$incDir/bdconn.inc.php";
-include_once "$incDir/libDBW.inc.php";
+include_once "libDBW.inc.php";
 
 // Load predefined arrays
 // Fulltext search fields
