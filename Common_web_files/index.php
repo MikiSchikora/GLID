@@ -29,7 +29,7 @@ print headerDBW("Home - GLID project");
 
     <div class="container">
 
-      <h1 class="text-center">GLID: Gene to Literature Integrative Database</h1>
+      <!--h1 class="text-center">GLID: Gene to Literature Integrative Database</h1-->
 
       <form name="MainForm" id="mainform-id" autocomplete="off" action="search_RecName.php" method="POST" enctype="multipart/form-data" class="margin-top">
       <div class="form-group">
