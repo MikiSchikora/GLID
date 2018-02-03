@@ -16,10 +16,22 @@ $_SESSION['queryData'] =$_REQUEST;
 //    header('Location: search.php?myQuery=' . $_REQUEST['myQuery']);
 //}
 
-$sql = "SELECT g.gene_recommended_name from Gene g where g.id_ENTREZGENE='".$_REQUEST['myQuery']."'";
+$sql_gene= "select g.gene_recommended_name from Gene g, GeneSynonyms gsyn where "
+        . "g.id_ENTREZGENE = gsyn.id_ENTREZGENE AND "
+        . "(gsyn.name_genesynonym = '".$_REQUEST['myQuery']."' OR "
+        . "g.gene_recommended_name = '".$_REQUEST['myQuery']."' or "
+        . "g.id_ENTREZGENE = '".$_REQUEST['myQuery']."');";
+
+$sql_protein = "select p.prot_recommended_name from Proteins p, ProteinSynonyms psyn, Gene g where "
+        . "g.id_ENTREZGENE = p.id_ENTREZGENE AND p.id_Uniprot = psyn.id_Uniprot AND "
+        . "(psyn.name_proteinsynonym = '".$_REQUEST['myQuery']."' OR "
+        . "p.prot_recommended_name = '".$_REQUEST['myQuery']."' or "
+        . "p.id_Uniprot = '".$_REQUEST['myQuery']."');";
+
+//$sql = "SELECT g.gene_recommended_name from Gene g where g.id_ENTREZGENE='".$_REQUEST['myQuery']."'";
 
 
-$rs = mysqli_query($mysqli, $sql) or print mysqli_error($mysqli);
+$rs = mysqli_query($mysqli, $sql_gene) or print mysqli_error($mysqli);
 
 
 if (!mysqli_num_rows($rs)){
@@ -46,7 +58,7 @@ if (!mysqli_num_rows($rs)){
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li><a href="index.php">Home</a></li>
+            <li class="active"><a href="index.php">Home</a></li>
             <li><a href="help.html">Help</a></li>
             <li><a href="contact.html">Contact</a></li>
           </ul>
@@ -58,19 +70,20 @@ if (!mysqli_num_rows($rs)){
 
       <h1 class="text-center">GLID: Gene to Literature Integrative Database</h1>
       
-      <h4>You searched ENTREZGENE ID: <?php print $_REQUEST['myQuery']?>.</h4>
+      <h4>You searched: <?php print $_REQUEST['myQuery']?>.</h4>
       <h4>The recommended name is <?php print $data["gene_recommended_name"]?></h4>
-       
-      <?php
       
+      
+<?php
+       
+       
         // How to do something after a checkbox is marked
+      
         if(isset($_REQUEST['RecName'])){
             print "hola";
         }
 
-      ?>
 
-<?php
 print footerDBW();
 
 }
