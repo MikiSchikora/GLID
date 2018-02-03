@@ -26,32 +26,12 @@ print headerDBW("Home - GLID project");
 
 ?>
 
-    <nav class="navbar navbar-inverse">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="index.php">GLID project</a>
-        </div>
-        <div id="navbar" class="collapse navbar-collapse">
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="index.php">Home</a></li>
-            <li><a href="help.html">Help</a></li>
-            <li><a href="contact.html">Contact</a></li>
-          </ul>
-        </div><!--/.nav-collapse -->
-      </div>
-    </nav>
 
     <div class="container">
 
       <h1 class="text-center">GLID: Gene to Literature Integrative Database</h1>
 
-      <form name="MainForm" id="mainform-id" autocomplete="off" action="search_Synonims.php" method="POST" enctype="multipart/form-data" class="margin-top">
+      <form name="MainForm" id="mainform-id" autocomplete="off" action="search_RecName.php" method="POST" enctype="multipart/form-data" class="margin-top">
       <div class="form-group">
         <label>Enter your query</label>
         <input type="text" class="form-control" id="query" name="myQuery" value="" required placeholder="Write here a gene/protein name, UniProt ID or ENTREZGENE ID (CDK2, cyclin dependent kinase 2, CDK2_HUMAN, 8246 ...)" > <!-- value="<?php //print $_SESSION['queryData']['query'] ?>" -->

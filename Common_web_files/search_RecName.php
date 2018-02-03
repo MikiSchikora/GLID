@@ -42,6 +42,7 @@ if (mysqli_num_rows($rs)) {
     $data = mysqli_fetch_assoc($rs);
     print headerDBW($_REQUEST['myQuery']);   
     ?>
+    <h4>You searched: <?php print $_REQUEST['myQuery']?></h4>
     <h4>The recommended name is <?php print $data["gene_recommended_name"]?></h4>
             
     <?php
@@ -66,6 +67,7 @@ if (mysqli_num_rows($rs)) {
         $data = mysqli_fetch_assoc($rs_prot);    
         print headerDBW($_REQUEST['myQuery']);
         ?>
+        <h4>You searched: <?php print $_REQUEST['myQuery']?></h4>
         <h4>The recommended name is <?php print $data["prot_recommended_name"]?></h4>
         <?php   
         print footerDBW();

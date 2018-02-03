@@ -49,7 +49,7 @@ function headerDBW($title) {
 
       <h1 class=\"text-center\">GLID: Gene to Literature Integrative Database</h1>
       
-      <h4>You searched: $title</h4>
+      
 ";
 }
 
