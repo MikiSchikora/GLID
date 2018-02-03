@@ -148,13 +148,13 @@ while($row = mysqli_fetch_array($result_tax))
 <!--form autocomplete="off" action="/action_page.php"-->
   <div class="autocomplete" style="width:300px;">
     <label for="exampleInputText">Enter name of specie</label>
-    <input id="inputspecie" type="text" name="myCountry" placeholder="Specie">
+    <input id="inputspecie" type="text" name="mySpecie" placeholder="Specie">
   </div>
 
 <p></p>
  <div class="autocomplete" style="width:300px;">
     <label for="exampleInputText">Enter name of taxonomic group</label>
-    <input id="inputtaxonomy" type="text" name="myCountry" placeholder="Taxonomic group">
+    <input id="inputtaxonomy" type="text" name="myTaxonomy" placeholder="Taxonomic group">
   </div>
   <!--input type="submit"-->
 
