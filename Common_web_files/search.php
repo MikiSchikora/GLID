@@ -74,8 +74,16 @@ if (!mysqli_num_rows($rs)){
       <h4>The recommended name is <?php print $data["gene_recommended_name"]?></h4>
       
       
-
 <?php
+       
+       
+        // How to do something after a checkbox is marked
+      
+        if(isset($_REQUEST['RecName'])){
+            print "hola";
+        }
+
+
 print footerDBW();
 
 }
