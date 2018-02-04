@@ -26,90 +26,82 @@ if(isset($_REQUEST['RecName'])){
         $geneRecName = Null;
         $protRecName = Null;
 
-        switch ($type_query)  {
-  
-            case "gene":
-                
-                // Gene RecName
-                $sql = "SELECT g.gene_recommended_name FROM Gene g, Species sp "
-                    . "WHERE g.tax_id = sp.tax_id "
-                    . "AND sp.common_name like '%".$Specie."%' AND g.gene_recommended_name = '".$query."'";       
-                $rs = mysqli_query($mysqli, $sql) or print mysqli_error($mysqli);
-                if($rs){$geneRecName = mysqli_fetch_assoc($rs)['gene_recommended_name'];}
-                 
-                // Prot RecName
-                $sql = "SELECT p.prot_recommended_name FROM Proteins p, Gene g, Species sp "
-                    . "WHERE g.id_ENTREZGENE = p.id_ENTREZGENE AND g.tax_id = sp.tax_id "
-                    . "AND sp.common_name like '%".$Specie."%' AND g.gene_recommended_name = '".$query."'";           
-                $rs = mysqli_query($mysqli, $sql) or print mysqli_error($mysqli);
-                if($rs){$protRecName = mysqli_fetch_assoc($rs)['prot_recommended_name'];}
+        if ($query_gene==1){
 
-                break;
-            
-            case "prot":
-            
-                // Gene RecName
-                $sql = "SELECT g.gene_recommended_name FROM Gene g, Proteins p, Species sp "
-                    . "WHERE g.id_ENTREZGENE = p.id_ENTREZGENE AND g.tax_id = sp.tax_id "
-                    . "AND sp.common_name like '%".$Specie."%' AND p.prot_recommended_name = '".$query."'"; 
-                $rs = mysqli_query($mysqli, $sql) or print mysqli_error($mysqli);
-                if($rs){$geneRecName = mysqli_fetch_assoc($rs)['gene_recommended_name'];}                
-                
-                // Prot RecName
-                $sql = "SELECT p.prot_recommended_name FROM Proteins p, Gene g, Species sp "
-                    . "WHERE g.id_ENTREZGENE = p.id_ENTREZGENE AND g.tax_id = sp.tax_id "
-                    . "AND sp.common_name like '%".$Specie."%' AND p.prot_recommended_name = '".$query."'";           
-                $rs = mysqli_query($mysqli, $sql) or print mysqli_error($mysqli);
-                if($rs){$protRecName = mysqli_fetch_assoc($rs)['prot_recommended_name'];}
+            // Gene RecName
+            $sql = "SELECT g.gene_recommended_name FROM Gene g, Species sp "
+                . "WHERE g.tax_id = sp.tax_id "
+                . "AND sp.common_name like '%".$Specie."%' AND g.gene_recommended_name = '".$query."'";       
+            $rs = mysqli_query($mysqli, $sql) or print mysqli_error($mysqli);
+            if($rs){$geneRecName = mysqli_fetch_assoc($rs)['gene_recommended_name'];}
 
-                break;
-                
-            case "gsyn":
-                
-                // Gene RecName
-                $sql = "SELECT g.gene_recommended_name FROM Gene g, Species sp, GeneSynonyms gsyn "
-                    . "WHERE g.id_ENTREZGENE = gsyn.id_ENTREZGENE AND g.tax_id = sp.tax_id "
-                    . "AND sp.common_name like '%".$Specie."%' AND gsyn.name_genesynonym = '".$query."'";                
-                $rs = mysqli_query($mysqli, $sql) or print mysqli_error($mysqli);
-                if($rs){$geneRecName = mysqli_fetch_assoc($rs)['gene_recommended_name'];}                 
-                
-                // Prot RecName
-                $sql = "SELECT p.prot_recommended_name FROM Proteins p, Gene g, Species sp, GeneSynonyms gsyn "
-                    . "WHERE g.id_ENTREZGENE = p.id_ENTREZGENE AND g.tax_id = sp.tax_id AND g.id_ENTREZGENE = gsyn.id_ENTREZGENE "
-                    . "AND sp.common_name like '%".$Specie."%' AND gsyn.name_genesynonym = '".$query."'";           
-                $rs = mysqli_query($mysqli, $sql) or print mysqli_error($mysqli);
-                if($rs){$protRecName = mysqli_fetch_assoc($rs)['prot_recommended_name'];}      
-              
-                break;
-                
-            case "psyn":
+            // Prot RecName
+            $sql = "SELECT p.prot_recommended_name FROM Proteins p, Gene g, Species sp "
+                . "WHERE g.id_ENTREZGENE = p.id_ENTREZGENE AND g.tax_id = sp.tax_id "
+                . "AND sp.common_name like '%".$Specie."%' AND g.gene_recommended_name = '".$query."'";           
+            $rs = mysqli_query($mysqli, $sql) or print mysqli_error($mysqli);
+            if($rs){$protRecName = mysqli_fetch_assoc($rs)['prot_recommended_name'];}
                   
-                // Gene RecName
-                $sql = "SELECT g.gene_recommended_name FROM Gene g, Species sp, ProteinSynonyms psyn, Proteins p "
-                    . "WHERE g.id_ENTREZGENE = p.id_ENTREZGENE AND g.tax_id = sp.tax_id AND p.id_Uniprot = psyn.id_Uniprot "
-                    . "AND sp.common_name like '%".$Specie."%' AND psyn.name_proteinsynonym = '".$query."'";                
-                $rs = mysqli_query($mysqli, $sql) or print mysqli_error($mysqli);
-                if($rs){$geneRecName = mysqli_fetch_assoc($rs)['gene_recommended_name'];}                 
-                                
-                // Prot RecName
-                $sql = "SELECT p.prot_recommended_name FROM Proteins p, Gene g, Species sp, ProteinSynonyms psyn "
-                    . "WHERE g.id_ENTREZGENE = p.id_ENTREZGENE AND g.tax_id = sp.tax_id AND p.id_Uniprot = psyn.id_Uniprot "
-                    . "AND sp.common_name like '%".$Specie."%' AND psyn.name_proteinsynonym = '".$query."'";           
-                $rs = mysqli_query($mysqli, $sql) or print mysqli_error($mysqli);
-                if($rs){$protRecName = mysqli_fetch_assoc($rs)['prot_recommended_name'];}                     
-                
-                break;
-                
-            default :
-                
-                $geneRecName = Null;
-                $protRecName = Null;
-      
-        }   
-        
+        }
+
+        if ($query_prot==1 and !$geneRecName and !$protRecName){
+
+            // Gene RecName
+            $sql = "SELECT g.gene_recommended_name FROM Gene g, Proteins p, Species sp "
+                . "WHERE g.id_ENTREZGENE = p.id_ENTREZGENE AND g.tax_id = sp.tax_id "
+                . "AND sp.common_name like '%".$Specie."%' AND p.prot_recommended_name = '".$query."'"; 
+            $rs = mysqli_query($mysqli, $sql) or print mysqli_error($mysqli);
+            if($rs){$geneRecName = mysqli_fetch_assoc($rs)['gene_recommended_name'];}                
+
+            // Prot RecName
+            $sql = "SELECT p.prot_recommended_name FROM Proteins p, Gene g, Species sp "
+                . "WHERE g.id_ENTREZGENE = p.id_ENTREZGENE AND g.tax_id = sp.tax_id "
+                . "AND sp.common_name like '%".$Specie."%' AND p.prot_recommended_name = '".$query."'";           
+            $rs = mysqli_query($mysqli, $sql) or print mysqli_error($mysqli);
+            if($rs){$protRecName = mysqli_fetch_assoc($rs)['prot_recommended_name'];}
+
+        }
+
+        if ($query_gsyn==1 and !$geneRecName and !$protRecName){
+
+            // Gene RecName
+            $sql = "SELECT g.gene_recommended_name FROM Gene g, Species sp, GeneSynonyms gsyn "
+                . "WHERE g.id_ENTREZGENE = gsyn.id_ENTREZGENE AND g.tax_id = sp.tax_id "
+                . "AND sp.common_name like '%".$Specie."%' AND gsyn.name_genesynonym = '".$query."'";                
+            $rs = mysqli_query($mysqli, $sql) or print mysqli_error($mysqli);
+            if($rs){$geneRecName = mysqli_fetch_assoc($rs)['gene_recommended_name'];}                 
+
+            // Prot RecName
+            $sql = "SELECT p.prot_recommended_name FROM Proteins p, Gene g, Species sp, GeneSynonyms gsyn "
+                . "WHERE g.id_ENTREZGENE = p.id_ENTREZGENE AND g.tax_id = sp.tax_id AND g.id_ENTREZGENE = gsyn.id_ENTREZGENE "
+                . "AND sp.common_name like '%".$Specie."%' AND gsyn.name_genesynonym = '".$query."'";           
+            $rs = mysqli_query($mysqli, $sql) or print mysqli_error($mysqli);
+            if($rs){$protRecName = mysqli_fetch_assoc($rs)['prot_recommended_name'];}      
+
+        }
+
+        if ($query_psyn==1 and !$geneRecName and !$protRecName){
+
+            // Gene RecName
+            $sql = "SELECT g.gene_recommended_name FROM Gene g, Species sp, ProteinSynonyms psyn, Proteins p "
+                . "WHERE g.id_ENTREZGENE = p.id_ENTREZGENE AND g.tax_id = sp.tax_id AND p.id_Uniprot = psyn.id_Uniprot "
+                . "AND sp.common_name like '%".$Specie."%' AND psyn.name_proteinsynonym = '".$query."'";                
+            $rs = mysqli_query($mysqli, $sql) or print mysqli_error($mysqli);
+            if($rs){$geneRecName = mysqli_fetch_assoc($rs)['gene_recommended_name'];}                 
+
+            // Prot RecName
+            $sql = "SELECT p.prot_recommended_name FROM Proteins p, Gene g, Species sp, ProteinSynonyms psyn "
+                . "WHERE g.id_ENTREZGENE = p.id_ENTREZGENE AND g.tax_id = sp.tax_id AND p.id_Uniprot = psyn.id_Uniprot "
+                . "AND sp.common_name like '%".$Specie."%' AND psyn.name_proteinsynonym = '".$query."'";           
+            $rs = mysqli_query($mysqli, $sql) or print mysqli_error($mysqli);
+            if($rs){$protRecName = mysqli_fetch_assoc($rs)['prot_recommended_name'];}                     
+
+        }
+
+            
         if ($protRecName or $geneRecName){
             $something_printed = 1;
-            print(" <h4> $Specie </h4> ");      
+            print(" <h3> $Specie </h3> ");      
             if ($geneRecName){ print(" <h5> Gene Recommended Name: $geneRecName <br></h5> ");}
             if ($protRecName){ print(" <h5> Protein Recommended Name: $protRecName <br></h5> ");}
         }
