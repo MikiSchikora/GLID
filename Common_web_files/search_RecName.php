@@ -43,12 +43,36 @@ if(isset($_REQUEST['RecName'])){
 
         
         
-        
         if ($protRecName or $geneRecName){
             $something_printed = 1;
             print(" <h3> $Specie </h3> ");      
-            if ($geneRecName){ print(" <h5> Gene Recommended Name: $geneRecName <br></h5> ");}
-            if ($protRecName){ print(" <h5> Protein Recommended Name: $protRecName <br></h5> ");}
+            if ($geneRecName){
+                print("<h5><b>Gene Recommended Name <br></h5></b>");
+               ?>
+               <form name="MainForm" id="mainform-id" autocomplete="off" action="" method="POST" enctype="multipart/form-data" class="margin-top">
+                   <div class="form-check">
+                       <input class="form-check-input" type="checkbox" value="" id="query_gene_RecName" name="query_gene_RecName">
+                       <label class="form-check-label" for="defaultCheck1">
+                           <?php 
+                          print(" <h5>$geneRecName <br></h5> ");
+                           ?>
+                       </label>
+                   </div>
+               <?php }
+            
+            if ($protRecName){ 
+                print(" <h5><b> Protein Recommended Name <br></h5></b>");
+                ?>
+                <form name="MainForm" id="mainform-id" autocomplete="off" action="" method="POST" enctype="multipart/form-data" class="margin-top">
+                   <div class="form-check">
+                       <input class="form-check-input" type="checkbox" value="" id="query_prot_RecName" name="query_prot_RecName">
+                       <label class="form-check-label" for="defaultCheck1">
+                           <?php 
+                          print(" <h5>$protRecName <br></h5> ");
+                           ?>
+                       </label>
+                   </div>
+            <?php }
         }
     }    
     
@@ -58,3 +82,4 @@ if(isset($_REQUEST['RecName'])){
     }
 }
 else {print "<h4> <br> Recommended name not selected </h4>";}
+?>
