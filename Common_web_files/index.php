@@ -124,7 +124,20 @@ while($row = mysqli_fetch_array($result_tax))
 </script>
 
 
+ <!-- This jQuery script allows to submit the form by fillin one out of Species or Taxonomy 
+ If none are filled, you cannot submit the form, if one is filled, ok.
+ We have added in the php script a message that says you cannot fill both of them -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script>
+jQuery(function ($) {
+    var $inputs = $('input[name=mySpecie],input[name=myTaxonomy]');
+    $inputs.on('input', function () {
+        // Set the required property of the other input to false if this input is not empty.
+        $inputs.not(this).prop('required', !$(this).val().length);
+    });
+});
 
+    </script>
 
 
 
