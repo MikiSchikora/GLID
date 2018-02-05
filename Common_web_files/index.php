@@ -43,63 +43,8 @@ print headerDBW("Home - GLID project");
       </div>
 
 
-      <h2>What do you want to search?</h2>
-
-       <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="RecName" name="RecName">
-         <label class="form-check-label" for="defaultCheck1">
-         Recommended gene/protein name
-         </label>
-       </div>
-
-       <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="Synonyms" name="Synonyms">
-         <label class="form-check-label" for="defaultCheck1">
-         Synonyms
-         </label>
-       </div>
-
-       <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="Orthologues" name="Orthologues">
-         <label class="form-check-label" for="defaultCheck1">
-         Orthologues
-         </label>
-       </div>
-
-       <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="Pfam" name="Pfam">
-         <label class="form-check-label" for="defaultCheck1">
-         Similar proteins (same PFAM domains)
-         </label>
-       </div>
-
-       <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="GO" name="GO">
-         <label class="form-check-label" for="defaultCheck1">
-         Similar function (Gene Ontology)
-         </label>
-       </div>
-
-
-
+          
       <h2>Looking for one specie or taxonomic group?</h2>
-
-        <!--div class="form-group">
-          <label for="exampleSelect1">Example select</label>
-          <select class="form-control" id="exampleSelect1" name="exampleSelect1">
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
-          </select>
-        </div-->
-
-
-<!--/form-->
-
-
-
 
 <?php
 $result_sp = mysqli_query( $mysqli, "SELECT Species.common_name FROM Species");
@@ -138,8 +83,6 @@ jQuery(function ($) {
 });
 
     </script>
-
-
 
 
 <!--Make sure the form has the autocomplete function switched off:-->
@@ -266,6 +209,47 @@ autocomplete(document.getElementById("inputtaxonomy"), taxonomy);
 </script>
 
 
+
+      <h2>What do you want to search?</h2>
+
+       <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="" id="RecName" name="RecName">
+         <label class="form-check-label" for="defaultCheck1">
+         Recommended gene/protein name
+         </label>
+       </div>
+
+       <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="" id="Synonyms" name="Synonyms">
+         <label class="form-check-label" for="defaultCheck1">
+         Synonyms
+         </label>
+       </div>
+
+       <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="" id="Orthologues" name="Orthologues">
+         <label class="form-check-label" for="defaultCheck1">
+         Orthologues
+         </label>
+       </div>
+
+       <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="" id="Pfam" name="Pfam">
+         <label class="form-check-label" for="defaultCheck1">
+         Similar proteins (same PFAM domains)
+         </label>
+       </div>
+
+       <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="" id="GO" name="GO">
+         <label class="form-check-label" for="defaultCheck1">
+         Similar function (Gene Ontology)
+         </label>
+       </div>
+
+
+          
+          
         <p></p>
         <button type="submit" class="btn btn-primary">Submit</button>
         <button class="btn btn-primary" onclick="window.location.href='index.php=?new=1'">New Search</button>
