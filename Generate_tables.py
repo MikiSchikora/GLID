@@ -3,7 +3,7 @@
 
 # PROGRAM IMPLEMENTATION:
 
-DataDir = "../DBW project/Data/"
+DataDir = "../Data/"
 
 # Define imput files
 
@@ -134,6 +134,7 @@ with open(Sprot_filename,"r") as fd:
 
 		# start a new entry, adding gene_IDs:
 		if line.startswith("ID"):
+
 			ID = line.split()[1].strip()
 
 			if ID in IDmap_keys:
@@ -217,10 +218,15 @@ with open(Sprot_filename,"r") as fd:
 			UniProt_map[ID][9].append(Type_GO)
 			UniProt_map[ID][10].append(Name_GO)
 
+
+
 		# record the current line for the next run
 		prev_line = line
 
-
+		print (UniProt_map[ID][8])
+		print (UniProt_map[ID][9])
+		print (UniProt_map[ID][10])
+		
 print("Sprot parsed, it has "+str(len(UniProt_map.keys()))+" Entries")
 
 # Parse the taxonomy names and record a dictionary with (Key: TaxID) a list that has: [Common Name, DivisionID]
