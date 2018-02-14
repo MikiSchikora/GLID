@@ -31,7 +31,7 @@ print headerDBW("Home - GLID project");
 
       <!--h1 class="text-center">GLID: Gene to Literature Integrative Database</h1-->
 
-      <form name="MainForm" id="mainform-id" autocomplete="off" action="search_RecName_miki.php" method="POST" enctype="multipart/form-data" class="margin-top">
+      <form name="MainForm" id="mainform-id" autocomplete="off" action="search_all.php" method="POST" enctype="multipart/form-data" class="margin-top">
      
       
      <!-- <form name="MainForm" id="mainform-id" autocomplete="off" action="search_Synonims.php" method="POST" enctype="multipart/form-data" class="margin-top">
