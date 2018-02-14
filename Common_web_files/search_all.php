@@ -15,7 +15,8 @@ $_SESSION['queryData'] = $_REQUEST;
 
 $array;
 $info;
-$items;
+$items=array();
+$something_printed=0;
 
 // Loop through species
 foreach ($Species as $Specie){
@@ -145,6 +146,10 @@ print "<br>";
 print footerDBW();   
     
 // Debug if you didn't find anything
-if (!$something_printed){
-    print(" <h5> Your search gave no results </5>");
+if ($something_printed===0){
+    print(" <h4> Your search gave no results <br><br></4>");?>
+
+<p><button class="btn btn-primary" onclick="window.location.href='index.php?new=1'">New Search</button></p>
+
+    <?php
 }
