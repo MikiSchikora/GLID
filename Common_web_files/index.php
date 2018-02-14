@@ -252,7 +252,7 @@ autocomplete(document.getElementById("inputtaxonomy"), taxonomy);
           
         <p></p>
         <button type="submit" class="btn btn-primary">Submit</button>
-        <button class="btn btn-primary" onclick="window.location.href='index.php=?new=1'">New Search</button>
+        <button class="btn btn-primary" onclick="window.location.href='index.php?new=1'">New Search</button>
       </form>
 
 
