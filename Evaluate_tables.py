@@ -34,6 +34,9 @@ with open(TablesDir+"Proteins_has_GeneOntology.tbl") as fd:
 
 	ProteinsWithGO = set([line.split("\t")[0] for line in fd])		
 
+with open(TablesDir+"Similar_GO.tbl") as fd:
+
+	ProteinsWithSimilarGO = set([line.split("\t")[3] for line in fd])	
 
 with open(TablesDir+"Gene.tbl") as fd:
 
@@ -69,10 +72,11 @@ with open(TablesDir+"Gene.tbl") as fd:
 
 		## (only 5536 genes have such a thing)?
 
-		# print(len(GenesWithOrthologueCluster))
+		#print(len(GenesWithOrthologueCluster))
 		
 		if geneID in GenesWithOrthologueCluster:
 
+			
 			pass
 			#print(line)
 
@@ -135,7 +139,8 @@ with open(TablesDir+"Proteins.tbl","r") as fd:
 
 		if pfamID not in PFAM_ids:
 
-			print(line)
+			pass
+			#print(line)
 			
 
 			# All correct # GOOD!!!!!
@@ -159,6 +164,7 @@ with open(TablesDir+"Proteins.tbl","r") as fd:
 
 		if ID not in ProteinsWithGO:
 
+			#print(line)
 			pass
 
 			# Everything is correct #GOOD

@@ -72,7 +72,7 @@ TaxIDs = set(["9606", # Homo sapiens
 	"4896", "1264690", "284812", "614666", "614667", "614668", "941278", "649908", "941279", "881122",  # Schizosaccharomyces pombe
 	"7227", # Drosophila melanogaster
 	"6239",  # Caenorhabditis elegans
-	"562", "866768", "498388", "1409786" # Escherichia coli, 
+	"562", "866768", "498388", "1409786" # Escherichia c oli, 
 	"1423", "1340494", "935855"]) # Bacillus subtilis
 	
 
