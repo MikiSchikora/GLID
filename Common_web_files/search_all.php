@@ -45,16 +45,16 @@ $info=array();
     $ProteinID=array();
 
 
-if (!mysqli_num_rows($rs)) { 
-    $info["Gene recommended name"]=$geneRecName;
-    $info["Protein recommended name"]=$protRecName;
-    $info["Gene synonyms"]=$GeneSynonyms;
-    $info["Protein synonyms"]=$ProteinSynonyms;
-    //// AQUÍ FALTEN LA RESTA D'ITEMS !!!!!! ORTOLEGS ET AL
-    $array[$Specie]= $info;
+    if (!mysqli_num_rows($rs)) { 
+        $info["Gene recommended name"]=$geneRecName;
+        $info["Protein recommended name"]=$protRecName;
+        $info["Gene synonyms"]=$GeneSynonyms;
+        $info["Protein synonyms"]=$ProteinSynonyms;
+        //// AQUÍ FALTEN LA RESTA D'ITEMS !!!!!! ORTOLEGS ET AL
+        $array[$Specie]= $info;
 
-    continue;
-}
+        continue;
+    }
     
     
 
@@ -125,23 +125,77 @@ if (!mysqli_num_rows($rs)) {
       
 } 
 
-
+            
 $items=  array_unique($items);
 
-    foreach ($items as $t) {
-        print "<br><h3>".$t."</h3><br>";
-        foreach ($Species as $s){
-            print "<h4>".$s."</h4><br>";
-            foreach ($array[$s][$t] as $final){
-                print_r ($final);
-                print "<br>";
-            }
-                        
+?>
+
+<form name="MainForm" id="mainform-id" autocomplete="off" action="pubmed.php" method="POST" enctype="multipart/form-data" class="margin-top">
+
+<!-- <div class="form-check">-->
+
+    <input type="checkbox" id="select_all"/> Select All
+<!--</div>-->
+    
+<?php
+foreach ($items as $t) {
+    print "<br><h3>".$t."</h3>";
+    ?>                   
+            <?php
+            
+    foreach ($Species as $s){
+        print "<br><h4>".$s."</h4><br>";
+        foreach ($array[$s][$t] as $final){
+            ?>
+               
+                   <input type="checkbox" class="checkbox" value="" id="final_pubmed" name="pubmed_query[<?php print $final ?>]">                        
+                      <?php 
+                      print $final;
+                       ?>                        
+               
+           <?php
         }
-                
-                
+
     }
 
+    // function
+    ?>
+
+<?php
+
+}?>
+                   
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>    
+
+<script>
+var select_all = document.getElementById("select_all"); //select all checkbox
+var checkboxes = document.getElementsByClassName("checkbox"); //checkbox items
+
+
+select_all.addEventListener("change", function(e){
+    for (i = 0; i < checkboxes.length; i++) { 
+        checkboxes[i].checked = select_all.checked;
+    }
+});
+
+
+for (var i = 0; i < checkboxes.length; i++) {
+    checkboxes[i].addEventListener('change', function(e){ //".checkbox" change 
+        //uncheck "select all", if one of the listed checkbox item is unchecked
+        if(this.checked == false){
+            select_all.checked = false;
+        }
+        //check "select all" if all checkbox items are checked
+        if(document.querySelectorAll('.checkbox:checked').length == checkboxes.length){
+            select_all.checked = true;
+        }
+    });
+}
+</script>    
+
+
+<?php
 print "<br>";
 print footerDBW();   
     
@@ -152,4 +206,7 @@ if ($something_printed===0){
 <p><button class="btn btn-primary" onclick="window.location.href='index.php?new=1'">New Search</button></p>
 
     <?php
+  
 }
+?>
+

@@ -31,7 +31,7 @@ print headerDBW("Home - GLID project");
 
       <!--h1 class="text-center">GLID: Gene to Literature Integrative Database</h1-->
 
-      <form name="MainForm" id="mainform-id" autocomplete="off" action="search_all.php" method="POST" enctype="multipart/form-data" class="margin-top">
+      <form name="MainForm" id="mainform-id" autocomplete="off" action="search_all_aida.php" method="POST" enctype="multipart/form-data" class="margin-top">
      
       
      <!-- <form name="MainForm" id="mainform-id" autocomplete="off" action="search_Synonims.php" method="POST" enctype="multipart/form-data" class="margin-top">
@@ -88,7 +88,7 @@ jQuery(function ($) {
 <!--Make sure the form has the autocomplete function switched off:-->
 <!--form autocomplete="off" action="/action_page.php"-->
   <div class="autocomplete" style="width:300px;">
-    <label for="exampleInputText">Enter name of specie</label>
+    <label for="exampleInputText">Enter name of specie</label> <br>
     <input id="inputspecie" type="text" name="mySpecie" placeholder="Specie">
   </div>
 
