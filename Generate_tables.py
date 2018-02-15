@@ -3,7 +3,7 @@
 
 # PROGRAM IMPLEMENTATION:
 
-DataDir = "../DBW project/Data/"
+DataDir = "../Data/"
 
 # Define imput files
 
@@ -19,9 +19,9 @@ import os
 
 # # define input files:
 
-# IDmap_filename = DataDir+"HUMAN_9606_idmapping_selected_simple.tab"
-# Sprot_filename = DataDir+"uniprot_sprot_human.dat"
-# Gene_info_filename = DataDir+"Homo_sapiens_simple.gene_info"
+#IDmap_filename = DataDir+"HUMAN_9606_idmapping_selected_simple.tab"
+#Sprot_filename = DataDir+"uniprot_sprot_human.dat"
+#Gene_info_filename = DataDir+"Homo_sapiens_simple.gene_info"
 
 #### ALL ####
 
@@ -53,18 +53,28 @@ OrthoDB_OGnames_filename = DataDir+"OrthoDB/odb9v1_OGs.tab"
 
 ##### DEFINE TAXIDS #####
 
-# Homo sapiens, Mus musculus, Bos taurus, Pan troglodytes, Gallus gallus, Xenopus laevis, Danio rerio, Nicotiana tabacum, Saccharomyces cerevisiae, Schizosaccharomyces pombe, Drosophila melanogaster, Caenorhabditis elegans, Escherichia coli, Bacillus subtilis
-
 
 # corrected set:
 
 # Until Pan troglodytes
 
-TaxIDs = set(["9606","10090","9913","9598","9031","8355","7955","4097","559292", "284812","7227","6239","83333", "224308"])
+#TaxIDs = set(["9606","10090","9913","9598","9031","8355","7955","4097","559292", "284812","7227","6239","83333", "224308"])
 
-
-#TaxIDs = set(["10090","30522","37011","4932", "4896","7227"])
-
+TaxIDs = set(["9606", # Homo sapiens
+	"10090","947985","35531","116058","10091","10092","1385377","80274","1643390","179238","1879032","57486","39442", #Mus musculus
+	"9913", #Bos taurus 
+	"9598", "756884", "37010", "37011", "91950", "37012", "1294088",  #Pan troglodytes
+	"9031", "208525", "405000", "400035", "208524",  #Gallus gallus
+	"8355", "443947", "288554", # Xenopus laevis
+	"7955", # Danio Rerio
+	"4097", # Nicotiana tabaccum
+	"4932", "1337652", "1247190", "1196866", "559292", "1418121",	# Saccharomyces cerevisiae
+	"4896", "1264690", "284812", "614666", "614667", "614668", "941278", "649908", "941279", "881122",  # Schizosaccharomyces pombe
+	"7227", # Drosophila melanogaster
+	"6239",  # Caenorhabditis elegans
+	"562", "866768", "498388", "1409786" # Escherichia coli, 
+	"1423", "1340494", "935855"]) # Bacillus subtilis
+	
 
 ##### PARSE STUFF #######
 
@@ -83,6 +93,8 @@ with open(Gene_info_filename,"r") as fd:
 			NCBIid = content[1].strip()
 			RecName = content[2].strip()
 			Synonimous = list(set(content[3].upper().split("|")))
+			if len(Synonimous)<2:
+				Synonimous = ["-"]
 			GeneInfo_map[NCBIid] = [RecName, TaxID, Synonimous]
 
 GeneInfo_map_keys = GeneInfo_map.keys()
@@ -108,6 +120,9 @@ IDmap_keys = IDmap.keys()
 
 print("ID mapping parsed")
 
+# delete genes that don't have a protein entry in UniProt:
+
+
 # import pickle
 
 # # obj0, obj1, obj2 are created here...
@@ -121,8 +136,9 @@ print("ID mapping parsed")
 #     obj0, obj1, obj2 = pickle.load(f)
 
 
-# Parse the Sprot_filename and add to dictionary that cointains UniProt_ID as key and a list as values: (NCBI_geneID , Ensembl_geneID, RecName, AltName(s), Short Name (s), PFAM_domain(s), PFAM_domain(s) name(s),sequence, GO ID (s), GO type(s), GO (name))
+# Parse the Sprot_filename and add to dictionary that cointains UniProt_ID as key and a list as values: (NCBI_geneID , Ensembl_geneID, RecName, AltName(s), Short Name (s), PFAM_domain(s), PFAM_domain(s) name(s),sequence, GO ID (s), GO type(s), GO (name)), [GOsC],[GOsF],[GOsP][SimilarGOsC], [SimilarGOsF], [SimilarGOsP]
 
+CDS_Genes = set()
 UniProt_map = {}	
 seq = ""
 writing_seq = 0
@@ -134,12 +150,17 @@ with open(Sprot_filename,"r") as fd:
 
 		# start a new entry, adding gene_IDs:
 		if line.startswith("ID"):
+
 			ID = line.split()[1].strip()
 
 			if ID in IDmap_keys:
 				NCBIid = IDmap[ID][0]
-				UniProt_map[ID] = [NCBIid,IDmap[ID][1],'',[],[],[],[],'',[],[],[]]
+				UniProt_map[ID] = [NCBIid,IDmap[ID][1],'-',["-"],["-"],["-"],["-"],'-',["-"],["-"],["-"],["-"],["-"],["-"],["-"],["-"],["-"]]
+				
+				# record all the genes that have a protein:
+				CDS_Genes.add(NCBIid)
 
+			
 			# skip the first line
 			else:
 				NCBIid = ""
@@ -217,11 +238,92 @@ with open(Sprot_filename,"r") as fd:
 			UniProt_map[ID][9].append(Type_GO)
 			UniProt_map[ID][10].append(Name_GO)
 
+			if Type_GO=="C":
+				UniProt_map[ID][11].append(GOid)
+			if Type_GO=="F":
+				UniProt_map[ID][12].append(GOid)
+			if Type_GO=="P":
+				UniProt_map[ID][13].append(GOid)								
+
 		# record the current line for the next run
 		prev_line = line
 
+Uniprot_map_keys = UniProt_map.keys()
 
+
+		
 print("Sprot parsed, it has "+str(len(UniProt_map.keys()))+" Entries")
+
+GeneInfo_map_keys = set(GeneInfo_map_keys)
+
+#print (CDS_Genes)
+# delete genes that don't have protein:
+
+for NCBIid in GeneInfo_map_keys:
+
+	if NCBIid not in CDS_Genes:
+
+		GeneInfo_map.pop(NCBIid)
+
+
+print ("Taken all genes that have a protein")
+
+# add to each protein the UniprotIDs of those with similar GOs:
+
+MaxN = 10
+
+i = 1
+
+for IDq in Uniprot_map_keys:
+
+	print("Looking at the UniprotID number: "+str(i))
+	i += 1
+
+	C_q = set(UniProt_map[IDq][11])
+	F_q = set(UniProt_map[IDq][12])
+	P_q = set(UniProt_map[IDq][13])
+
+	TaxID_q = GeneInfo_map[UniProt_map[IDq][0]][1]
+
+	Nsimilar_foundC = 0
+	Nsimilar_foundF = 0
+	Nsimilar_foundP = 0
+
+	for IDs in Uniprot_map_keys:
+
+		TaxID_s = GeneInfo_map[UniProt_map[IDs][0]][1]
+
+		if TaxID_s == TaxID_q and IDq != IDs and IDq!="-" and IDs!="-" :
+
+			C_s = set(UniProt_map[IDs][11])
+			F_s = set(UniProt_map[IDs][12])
+			P_s = set(UniProt_map[IDs][13])	
+
+			if C_q!="-" and F_q!="-" and P_q!="-" and C_s!="-" and F_s!="-" and P_s!="-":
+
+				if Nsimilar_foundC>=MaxN and Nsimilar_foundF>=MaxN and Nsimilar_foundP>=MaxN:
+					break
+
+				if len(C_q.intersection(C_s))>=(len(C_q)*0.8) and len(C_q.intersection(C_s))>=(len(C_s)*0.8) and Nsimilar_foundC <=MaxN:
+					UniProt_map[IDq][14].append(IDs)
+					Nsimilar_foundC += 1
+
+
+				if len(F_q.intersection(F_s))>=(len(F_q)*0.8) and len(F_q.intersection(F_s))>=(len(F_s)*0.8) and Nsimilar_foundF <=MaxN:
+					UniProt_map[IDq][15].append(IDs)
+					Nsimilar_foundF += 1
+			
+
+				if len(P_q.intersection(P_s))>=(len(P_q)*0.8) and len(P_q.intersection(P_s))>=(len(P_s)*0.8) and Nsimilar_foundP <=MaxN:
+					UniProt_map[IDq][16].append(IDs)
+					Nsimilar_foundP += 1
+
+
+
+
+#print(UniProt_map)
+print("GO-similar proteins created")
+
 
 # Parse the taxonomy names and record a dictionary with (Key: TaxID) a list that has: [Common Name, DivisionID]
 
@@ -327,9 +429,12 @@ print("Printing")
 
 # PRINT TABLES:
 
+print(UniProt_map)
+
 #### Gene ####
 
 Gene_input = "id_NCBI\tgene_recommended_name\ttax_id\n"
+Gene_input += "-\t-\t9606\n"
 
 for NCBIid in GeneInfo_map:
 
@@ -380,9 +485,9 @@ for NCBIid in GeneInfo_map:
 	Synonyms = GeneInfo_map[NCBIid][2]
 
 	#chech that there are synonyms
-	if len(Synonyms[0])>1:
-		for Syn in Synonyms:
-			GeneSynonyms_input += NCBIid+"_"+Syn+"\t"+NCBIid+"\t"+Syn+"\n"
+	#if len(Synonyms[0])>1:
+	for Syn in Synonyms:
+		GeneSynonyms_input += NCBIid+"_"+Syn+"\t"+NCBIid+"\t"+Syn+"\n"
 
 fd = open("./Tables/GeneSynonyms.tbl","w")
 fd.write(GeneSynonyms_input)
@@ -396,33 +501,35 @@ Proteins_input = "id_Uniprot\tid_NCBI\tprotein_recommended_name\tid_pfam\n"
 ProteinSynonyms_input = "id_proteinsynonyms\tid_Uniprot\tname_proteinsynonym\n"
 Pfam_input = "id_pfam\tname_pfam\n"
 
+Printed_PFAMids = set()
+
 for ID in UniProt_map:
 	Content = UniProt_map[ID]
 
 	#check that it has an NCBI_ID
-	if len(Content[0])>1:
+	#if len(Content[0])>1:
 
-		PfamID = "|".join(Content[5])
-		PfamNames = "|".join(Content[6])
+	PfamID = "|".join(Content[5])
+	PfamNames = "|".join(Content[6])
 
-		#check that PfamID is not empty
-		if len(PfamID)>1:
+	#check that PfamID is not empty
+	#if len(PfamID)>2:
 
-			Proteins_input += ID+"\t"+Content[0]+"\t"+Content[2]+"\t"+PfamID+"\n"
+	Proteins_input += ID+"\t"+Content[0]+"\t"+Content[2]+"\t"+PfamID+"\n"
 
-			# Add to Pfam_input, just if it is not already there
-			if Pfam_input.find(PfamID)<0:
+	# Add to Pfam_input, just if it is not already there
+	if PfamID not in Printed_PFAMids:
+		Pfam_input += PfamID+"\t"+PfamNames+"\n"
+		Printed_PFAMids.add(PfamID)
 
-				Pfam_input += PfamID+"\t"+PfamNames+"\n"
+	# add ProteinSynonyms (AltName(s) and Short Name (s))
 
-			# add ProteinSynonyms (AltName(s) and Short Name (s))
+	Synonyms = Content[3]+Content[4]
 
-			Synonyms = Content[3]+Content[4]
-
-			if len(Synonyms)>0:
-				if len(Synonyms[0])>1:
-					for Syn in Synonyms:
-						ProteinSynonyms_input += ID+"_"+Syn+"\t"+ID+"\t"+Syn+"\n"
+	#if len(Synonyms)>0:
+	#	if len(Synonyms[0])>2:
+	for Syn in Synonyms:
+		ProteinSynonyms_input += ID+"_"+Syn+"\t"+ID+"\t"+Syn+"\n"
 	
 
 fd = open("./Tables/Proteins.tbl","w")
@@ -471,4 +578,84 @@ fd.close()
 
 
 print("OrthologueCluster and Gene_has_OrthologueCluster printed")
+
+#### GeneOntology, Proteins_has_GeneOntology and SimilarGO
+
+GeneOntology_input = "id_GO\ttype\tname\n"
+Proteins_has_GeneOntology_input = "Proteins_id_Uniprot\tGeneOntology_id_GO\n"
+Similar_GO_input = "id_similar_GO\tid_Uniprot_similar\tType_GO\tid_Uniprot\n"
+
+id_similar_GO = 1 #this will be an arbitrary number
+
+#GO (name)), [GOsC],[GOsF],[GOsP][SimilarGOsC], [SimilarGOsF], [SimilarGOsP]
+
+for ID in UniProt_map.keys():
+
+	GO_ids = UniProt_map[ID][8]
+	GO_types = UniProt_map[ID][9]
+	GO_names = UniProt_map[ID][10]
+
+	# avoid entering proteins that are not in proteins
+	if ID not in Proteins_input:
+		continue
+
+	for i in range(0,len(GO_ids)):
+
+		# load GeneOntology
+		id_GO = GO_ids[i]+GO_types[i]
+
+		if id_GO not in GeneOntology_input:
+
+			GeneOntology_input += id_GO+"\t"+GO_types[i]+"\t"+GO_names[i]+"\n"
+
+		# load Proteins_has_GeneOntology
+		Proteins_has_GeneOntology_input += ID+"\t"+id_GO+"\n"
+
+
+	# load Similar_GO_input
+
+	SimilarCs = UniProt_map[ID][14]
+	SimilarFs = UniProt_map[ID][15]
+	SimilarPs = UniProt_map[ID][16]
+
+	for SimilarC in SimilarCs:
+		if SimilarC != "-":
+			Similar_GO_input += str(id_similar_GO)+"\t"+SimilarC+"\tC\t"+ID+"\n"
+			id_similar_GO += 1
+
+	for SimilarF in SimilarFs:
+		if SimilarF != "-":
+			Similar_GO_input += str(id_similar_GO)+"\t"+SimilarF+"\tF\t"+ID+"\n"
+			id_similar_GO += 1
+
+	for SimilarP in SimilarPs:
+		if SimilarP != "-":
+			Similar_GO_input += str(id_similar_GO)+"\t"+SimilarP+"\tP\t"+ID+"\n"
+			id_similar_GO += 1
+
+
+fd = open("./Tables/GeneOntology.tbl","w")
+fd.write(GeneOntology_input)
+fd.close()
+
+fd = open("./Tables/Proteins_has_GeneOntology.tbl","w")
+fd.write(Proteins_has_GeneOntology_input)
+fd.close()
+
+fd = open("./Tables/Similar_GO.tbl","w")
+fd.write(Similar_GO_input)
+fd.close()
+
+print ("GO printed")
+		
+
+
+
+
+
+
+
+
+
+
 

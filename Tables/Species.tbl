@@ -1,5 +1,8 @@
 tax_id	common_name	division_id
+562	Escherichia coli	0
 4097	Nicotiana tabacum	4
+4896	Schizosaccharomyces pombe	4
+4932	Saccharomyces cerevisiae	4
 6239	Caenorhabditis elegans	1
 7227	Drosophila melanogaster	1
 7955	Danio rerio	10
@@ -9,7 +12,45 @@ tax_id	common_name	division_id
 9606	Homo sapiens	5
 9913	Bos taurus	2
 10090	Mus musculus	6
-83333	Escherichia coli K-12	0
-224308	Bacillus subtilis subsp. subtilis str. 168	0
+10091	Mus musculus castaneus	6
+10092	Mus musculus domesticus	6
+35531	Mus musculus bactrianus	6
+37010	Pan troglodytes schweinfurthii	5
+37011	Pan troglodytes troglodytes	5
+37012	Pan troglodytes verus	5
+39442	Mus musculus musculus	6
+57486	Mus musculus molossinus	6
+80274	Mus musculus gentilulus	6
+91950	Pan troglodytes vellerosus	5
+116058	Mus musculus brevirostris	6
+179238	Mus musculus homourus	6
+208524	Gallus gallus spadiceus	10
+208525	Gallus gallus bankiva	10
 284812	Schizosaccharomyces pombe 972h-	4
+288554	Xenopus laevis sudanensis	10
+400035	Gallus gallus murghi	10
+405000	Gallus gallus jabouillei	10
+443947	Xenopus laevis laevis	10
+498388	Escherichia coli C	0
 559292	Saccharomyces cerevisiae S288C	4
+614666	Schizosaccharomyces pombe DM3650	4
+614667	Schizosaccharomyces pombe DM3755	4
+614668	Schizosaccharomyces pombe DM3757	4
+649908	Schizosaccharomyces pombe OY26	4
+756884	Pan troglodytes ellioti	5
+866768	Escherichia coli 'BL21-Gold(DE3)pLysS AG'	0
+881122	Schizosaccharomyces pombe strain SPY73 975 h+	4
+935855	Bacillus subtilis J23	0
+941278	Schizosaccharomyces pombe NCYC132	4
+941279	Schizosaccharomyces pombe SPK1820	4
+947985	Mus musculus albula	6
+1196866	Saccharomyces cerevisiae S228	4
+1247190	Saccharomyces cerevisiae BY4741	4
+1264690	Schizosaccharomyces pombe 927	4
+1294088	Pan troglodytes verus x troglodytes	5
+1337652	Saccharomyces cerevisiae 101S	4
+1340494	Bacillus subtilis TO-A	0
+1385377	Mus musculus gansuensis	6
+1418121	Saccharomyces cerevisiae S288C x YJM789	4
+1643390	Mus musculus helgolandicus	6
+1879032	Mus musculus isatissus	6
