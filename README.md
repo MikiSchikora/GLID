@@ -10,8 +10,12 @@ These instructions will get you a copy of the project up and running on your loc
 
 What things you need to install the software and how to install them.
 
+* MySQL
+
 ```
-Give examples
+create database glid;
+use glid;
+source glid.dump.sql;
 ```
 
 ### Installing
@@ -72,7 +76,11 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 ## Authors
 
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
+* **MiquelÀngel Schikora** - [Github](https://github.com/MikiSchikora)
+* **Marina Lleal** - [Github](https://github.com/marinallealcustey)
+* **Aida Ripoll** - [Github](https://github.com/aidarripoll)
+
+
 
 See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
 
