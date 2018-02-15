@@ -115,6 +115,103 @@ $info=array();
         
     }  
     
+    
+    
+    
+    
+    
+    
+    
+        
+    // FROM HERE IT IS NEW
+    
+     
+           
+    // If you want to search for Orthologues
+    if(isset($_REQUEST["Orthologues"])){
+        
+        //Start with an empty array
+        $GeneOrthologues=array();
+               
+        // We have $GeneID to link the Gene and Orthologue cluster
+        // Get information about the orthologue cluster in your GeneID: 
+        $cluster_sql = "SELECT oc.ortho_cluster "
+                . "FROM Gene g, OrthologueCluster oc, Gene_has_OrthologueCluster goc "
+                . "WHERE g.id_ENTREZGENE = goc.Gene_id_ENTREZGENE "
+                . "AND oc.ortho_cluster = goc.OrthologueCluster_ortho_cluster "
+                . "AND g.id_ENTREZGENE = ".$GeneID[0].";";  
+        
+        // We look for the ortho cluster at the DB
+        $cluster_rs = mysqli_query($mysqli, $cluster_sql) or print mysqli_error($mysqli); 
+
+        //If there is no ortho cluster for the query gene, create empty array and end
+        if (!mysqli_num_rows($cluster_rs)) { 
+            print("YOUR QUERY GENE HAS NO ORTHOLOGUE CLUSTER");
+            $info["Gene Orthologues"]=$GeneOrthologues; //empty array
+        
+            
+        //If there is one or more ortho cluster for the query gene:
+        } else {
+
+            //print_r($cluster_rs);
+
+            
+            //Here we have an array with the different orthologue cluster names and search MySQL with this name
+            // I DONT KNOW IF THIS WORKS!!!!!!
+            // The idea is to loop through the array of ortho clusters
+            $i=0;
+            while ($cluster_rsF = mysqli_fetch_array($cluster_rs) and $i<10) {
+                $i++;
+
+                //print_r ($cluster_rsF);
+                // Query MySQL DB now with a ortho cluster every time
+                // WE HAVE TO ADD OPTION TO SELECT ALL GENES EXCEPT MINE!
+                $ortho_sql = "SELECT g.gene_recommended_name "
+                    . "FROM Gene g, Gene_has_OrthologueCluster goc "
+                    . "WHERE g.id_ENTREZGENE = goc.Gene_id_ENTREZGENE "
+                    . "AND g.id_ENTREZGENE != '$GeneID[0]' AND goc.OrthologueCluster_ortho_cluster = '$cluster_rsF[0]';";      
+
+                $ortho_rs = mysqli_query($mysqli, $ortho_sql) or print mysqli_error($mysqli); 
+            
+                //If there are no results of the ortho cluster appart from original gene
+                if (!mysqli_num_rows($ortho_rs)) { 
+                    //print("No orthologues found <br>");
+                    $info["Gene Orthologues"]=$GeneOrthologues; //empty array
+                } else {
+
+                    while ($ortho_rsF = mysqli_fetch_array($ortho_rs)) {
+                        //I save here the info of the orthologue gene
+                        //print_r($ortho_rsF['gene_recommended_name']);
+                        //print("<br>");
+                        $GeneOrthologues[] = $ortho_rsF['gene_recommended_name']; //This is the gene recommended name of the orthologue gene
+                        //print($rsF['gene_recommended_name']);
+                    } 
+                }
+            }
+        }
+
+        //Save only unique orthologue names (?)
+        $GeneOrthologues=  array_unique($GeneOrthologues);
+                        //print_r ($GeneOrthologues);
+
+        // If I have found gene orthologues, I now save it into $info to print it later
+        //MAYBE THIS COULD BE PUT INSIDE THE PREVIOUS WHILE!!!
+        if ($GeneOrthologues){
+                $something_printed = 1;
+                $info["Gene orthologues"]=$GeneOrthologues;
+                $items[]="Gene orthologues";
+
+        }  
+    }
+    
+    // BEFORE THIS IT IS NEW
+    
+    
+    
+    
+    
+    
+    
     //$Specie;
     
     $array[$Specie]= $info;
@@ -133,16 +230,13 @@ $items=  array_unique($items);
 <form name="MainForm" id="mainform-id" autocomplete="off" action="pubmed.php" method="POST" enctype="multipart/form-data" class="margin-top">
 
 <!-- <div class="form-check">-->
-
     <input type="checkbox" id="select_all"/> Select All
 <!--</div>-->
     
 <?php
 foreach ($items as $t) {
-    print "<br><h3>".$t."</h3>";
-    ?>                   
-            <?php
-            
+    print "<br><h3>".$t."</h3>"; //only if $array[$s][$t] is not empty
+           
     foreach ($Species as $s){
         print "<br><h4>".$s."</h4><br>";
         foreach ($array[$s][$t] as $final){
@@ -150,7 +244,7 @@ foreach ($items as $t) {
                
                    <input type="checkbox" class="checkbox" value="" id="final_pubmed" name="pubmed_query[<?php print $final ?>]">                        
                       <?php 
-                      print $final;
+                      print $final; //only if not "-"
                        ?>                        
                
            <?php
