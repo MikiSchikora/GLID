@@ -24,7 +24,7 @@ foreach ($Species as $Specie){
     $sql = "SELECT g.gene_recommended_name, p.prot_recommended_name, gsyn.name_genesynonym, psyn.name_proteinsynonym, g.id_ENTREZGENE, p.id_Uniprot "
         . "FROM Gene g, Species sp, GeneSynonyms gsyn, ProteinSynonyms psyn, Proteins p "
         . "WHERE g.tax_id = sp.tax_id AND g.id_ENTREZGENE = gsyn.id_ENTREZGENE AND g.id_ENTREZGENE = p.id_ENTREZGENE AND p.id_Uniprot = psyn.id_Uniprot "
-        . "AND sp.common_name like '%".$Specie."%' AND (g.gene_recommended_name = '".$query."' OR gsyn.name_genesynonym = '".$query."' OR g.id_ENTREZGENE = '".$query."' OR psyn.name_proteinsynonym = '".$query."' OR p.prot_recommended_name = '".$query."' OR p.id_Uniprot = '".$query."');";       
+        . "AND sp.common_name like '%".$Specie."%' AND (g.gene_recommended_name = '".$query."' OR gsyn.name_genesynonym = '".$query."' OR g.id_ENTREZGENE = '".$query."' OR psyn.name_proteinsynonym = '".$query."' OR p.prot_recommended_name = '".$query."' OR p.id_Uniprot like '".$query."\_%');";       
     
     $rs = mysqli_query($mysqli, $sql) or print mysqli_error($mysqli); 
          
@@ -34,6 +34,7 @@ foreach ($Species as $Specie){
     $protRecName=array(); 
     $GeneID= array();      
     $ProteinID=array();
+    $FinalGeneOrthologues = array();
 
     $GO_terms= array(); // an array cointaining the GO decription and type of this gene. 
     $GO_terms['C'] = array(); $GO_terms['F'] = array(); $GO_terms['P'] = array(); 
@@ -46,12 +47,10 @@ foreach ($Species as $Specie){
         $info["Protein recommended name"]=$protRecName;
         $info["Gene synonyms"]=$GeneSynonyms;
         $info["Protein synonyms"]=$ProteinSynonyms;
-        $info["Gene Orthologues"]=$ProteinSynonyms;
+        $info["Gene Orthologues"]=$FinalGeneOrthologues;
         $info["GO terms"]=$GO_terms;
         $info["GO_similar_genes"]=$GO_similar_genes;
-        
-        
-        
+                
         //// AQUÍ FALTEN LA RESTA D'ITEMS !!!!!! ORTOLEGS ET AL
         $array[$Specie]= $info;
 
@@ -172,8 +171,8 @@ foreach ($Species as $Specie){
 
         //If there is no ortho cluster for the query gene, create empty array and end
         if (!mysqli_num_rows($cluster_rs)) { 
-            print("YOUR QUERY GENE HAS NO ORTHOLOGUE CLUSTER");
-            $info["Gene Orthologues"]=$GeneOrthologues; //empty array
+            //print("YOUR QUERY GENE HAS NO ORTHOLOGUE CLUSTER");
+            $info["Gene Orthologues"]=$FinalGeneOrthologues; //empty array
         
             
         //If there is one or more ortho cluster for the query gene:
@@ -187,8 +186,8 @@ foreach ($Species as $Specie){
                 $i++;
 
                 // Query MySQL DB now with a ortho cluster every time
-                $ortho_sql = "SELECT g.gene_recommended_name "
-                    . "FROM Gene g, Gene_has_OrthologueCluster goc "
+                $ortho_sql = "SELECT g.gene_recommended_name, s.common_name "
+                    . "FROM Gene g, Gene_has_OrthologueCluster goc, Species s "
                     . "WHERE g.id_ENTREZGENE = goc.Gene_id_ENTREZGENE "
                     . "AND g.id_ENTREZGENE != '$GeneID[0]' AND goc.OrthologueCluster_ortho_cluster = '$cluster_rsF[0]';";      
 
@@ -198,29 +197,50 @@ foreach ($Species as $Specie){
                 if (!mysqli_num_rows($ortho_rs)) { 
                     $info["Gene Orthologues"]=$GeneOrthologues; //empty array
                 } else {
-
+ 
                     while ($ortho_rsF = mysqli_fetch_array($ortho_rs)) {
                         //I save here the info of the orthologue gene
-                        $GeneOrthologues[] = $ortho_rsF['gene_recommended_name']; //This is the gene recommended name of the orthologue gene
-                    } 
+                        $Ortho_Specie = $ortho_rsF['common_name'];
+                        $Ortho_Specie_array = explode(" ", $Ortho_Specie);
+                        $Ortho_Specie = substr($Ortho_Specie_array[0],0,1).". ".$Ortho_Specie_array[1]; // ." ".$cluster_rsF[0]
+                                                
+                        $GeneOrthologues[] = strtoupper($ortho_rsF['gene_recommended_name'])."_".$Ortho_Specie; //This is the gene recommended name of the orthologue gene
+                    }  
                 }
             }
         }
 
-        //Save only unique orthologue names (?)
-        $GeneOrthologues=  array_unique($GeneOrthologues);
-                        //print_r ($GeneOrthologues);
+        //Save only unique orthologue names . This is an array of Name_Specie
+        $GeneOrthologues=  array_unique($GeneOrthologues); 
         
+        // This has to be formatted into an array of "Name; Specie1, Specie2, SpecieN"
         
+        // create an associative array                
+        $GeneOrthologues_associative = array();
+        foreach($GeneOrthologues as $go){
+            $name = explode("_",$go)[0];
+            $specie = explode("_",$go)[1];
+            
+            if (!isset($GeneOrthologues_associative[$name])){
+                $GeneOrthologues_associative[$name] = array();
+            }
+            else{
+                $GeneOrthologues_associative[$name][] = $specie;
+            }
+        }
+        
+        // create the array of strings:
+        $FinalGeneOrthologues = array();
+        
+        foreach($GeneOrthologues_associative as $name => $species){
+            $FinalGeneOrthologues[] = $name."<br><b>found in</b> ".implode(", ",$species)."<br>";
+        }
+    
         // If I have found gene orthologues, I now save it into $info to print it later
-        //MAYBE THIS COULD BE PUT INSIDE THE PREVIOUS WHILE!!!
-        if (($GeneOrthologues)){
-                $something_printed = 1;
-                $info["Gene Orthologues"]=$GeneOrthologues;
-                $items[]="Gene Orthologues";
 
-        }  
-         
+        $info["Gene Orthologues"]=$FinalGeneOrthologues;
+        $items[]="Gene Orthologues";
+
          
     }
     
@@ -251,7 +271,10 @@ $items=  array_unique($items);
     
 <?php
 foreach ($items as $t) {
+    
+    
     print "<h1>".$t."</h1>"; //only if $array[$s][$t] is not empty
+    ?> <div class="outline"><?php
            
     foreach ($Species as $s){
  
@@ -268,26 +291,28 @@ foreach ($items as $t) {
                 if (!empty($array[$s]["GO terms"][$type]) and (count($array[$s]["GO terms"][$type])>1 or  $array[$s]["GO terms"][$type][0]!="-")){
                     
                     if ($specie_printed===0){
-                        print "<br><h4>".$s."</h4><br>";
+                        ?> &nbsp;&nbsp;&nbsp;&nbsp; <?php
+                        print " <h3> ".$s."</h3><br>";
                         $specie_printed=1;
                     }
                     
-                    print "<h5>This gene has the following ".$name." GO terms:</h5><br>";
+                    print "<h4>This gene has the following ".$name." GO terms:</h4><br>";
                     // print the GO term names
                     foreach($array[$s]["GO terms"][$type] as $term){
                         if ($term != "-"){
-                            print "<p>".$term."</p>";
+                            print "<p> &nbsp;&nbsp;&nbsp;&nbsp;".$term."</p>";
                         }
                     }  print "<br>";                                   
                 
                     if (!empty($array[$s]["GO similar genes"][$type]) and (count($array[$s]["GO similar genes"][$type])>1 or  $array[$s]["GO similar genes"][$type][0]!="-")){                
                         // print the similar genes:
-                        print "<h5>Genes with a similar ".$name." in this specie are...</h5><br>";
+                        print "<h4>Genes with a similar ".$name." in this specie are...</h4><br>";
                         foreach($array[$s]["GO similar genes"][$type] as $sim_gene){
 
                             $gene_rec_name = explode(";",$sim_gene)[0];
                             if ($gene_rec_name != "-"){
-                            ?>                    
+                            ?>   
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <input type="checkbox" class="check_good" value="" id="final_pubmed" name="pubmed_query[<?php print $gene_rec_name ?>]">                                       
                                 <?php print $gene_rec_name; //only if not "-" ?>     
                                 <br>
@@ -297,19 +322,24 @@ foreach ($items as $t) {
                     }                               
                 }                                
             }           
-        }       
+        }
+        
+        // other elseifs
         else{          
+            
+            
             
             // print specie header:
             
             if (!empty($array[$s][$t]) and (count($array[$s][$t])>1 or $array[$s][$t][0]!="-")){     
-                print "<br><h4>".$s."</h4><br>";
+                print "<br><h3>".$s."</h3><br>";
             }
             
             foreach ($array[$s][$t] as $final){ ?>
 
                 <?php if ($final == "-"){  continue; } ?>
-                <input type="checkbox" class="check_good" value="" id="final_pubmed" name="pubmed_query[<?php print $final ?>]">                
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="checkbox" class="check_good" value="" id="final_pubmed" name="pubmed_query[<?php print explode("<br>",$final)[0] ?>]">                
                 <?php print $final; //only if not "-" ?>  
                 <br>
 
@@ -318,7 +348,7 @@ foreach ($items as $t) {
         }
     }
     ?>
-
+    </div>
 <?php
 
 }?>

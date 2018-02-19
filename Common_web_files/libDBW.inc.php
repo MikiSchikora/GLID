@@ -18,6 +18,17 @@ function headerDBW($title) {
         <link rel=\"stylesheet\" href=\"DataTable/jquery.dataTables.min.css\"/>
         <script type=\"text/javascript\" src=\"DataTable/jquery-2.2.0.min.js\"></script>
         <script type=\"text/javascript\" src=\"DataTable/jquery.dataTables.min.js\"></script>
+        
+    <!-- Extra styles-->
+    <style>
+        .check_good {display: inline;}
+        .outline {
+            outline-color: black;
+            outline-style: double;
+        }
+    </style>
+    
+       
 
 </head>
 <body bgcolor=\"#ffffff\">
