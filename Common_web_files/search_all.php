@@ -179,9 +179,6 @@ foreach ($Species as $Specie){
         //If there is one or more ortho cluster for the query gene:
         } else {
 
-            //print_r($cluster_rs);
-
-            
             //Here we have an array with the different orthologue cluster names and search MySQL with this name
             // I DONT KNOW IF THIS WORKS!!!!!!
             // The idea is to loop through the array of ortho clusters
@@ -189,9 +186,7 @@ foreach ($Species as $Specie){
             while ($cluster_rsF = mysqli_fetch_array($cluster_rs) and $i<10) {
                 $i++;
 
-                //print_r ($cluster_rsF);
                 // Query MySQL DB now with a ortho cluster every time
-                // WE HAVE TO ADD OPTION TO SELECT ALL GENES EXCEPT MINE!
                 $ortho_sql = "SELECT g.gene_recommended_name "
                     . "FROM Gene g, Gene_has_OrthologueCluster goc "
                     . "WHERE g.id_ENTREZGENE = goc.Gene_id_ENTREZGENE "
@@ -201,16 +196,12 @@ foreach ($Species as $Specie){
             
                 //If there are no results of the ortho cluster appart from original gene
                 if (!mysqli_num_rows($ortho_rs)) { 
-                    //print("No orthologues found <br>");
                     $info["Gene Orthologues"]=$GeneOrthologues; //empty array
                 } else {
 
                     while ($ortho_rsF = mysqli_fetch_array($ortho_rs)) {
                         //I save here the info of the orthologue gene
-                        //print_r($ortho_rsF['gene_recommended_name']);
-                        //print("<br>");
                         $GeneOrthologues[] = $ortho_rsF['gene_recommended_name']; //This is the gene recommended name of the orthologue gene
-                        //print($rsF['gene_recommended_name']);
                     } 
                 }
             }
@@ -219,15 +210,18 @@ foreach ($Species as $Specie){
         //Save only unique orthologue names (?)
         $GeneOrthologues=  array_unique($GeneOrthologues);
                         //print_r ($GeneOrthologues);
-
+        
+        
         // If I have found gene orthologues, I now save it into $info to print it later
         //MAYBE THIS COULD BE PUT INSIDE THE PREVIOUS WHILE!!!
-        if ($GeneOrthologues){
+        if (($GeneOrthologues)){
                 $something_printed = 1;
                 $info["Gene Orthologues"]=$GeneOrthologues;
                 $items[]="Gene Orthologues";
 
         }  
+         
+         
     }
     
     // BEFORE THIS IT IS ORTHOLOGUES
@@ -294,8 +288,9 @@ foreach ($items as $t) {
                             $gene_rec_name = explode(";",$sim_gene)[0];
                             if ($gene_rec_name != "-"){
                             ?>                    
-                                <input type="checkbox" class="checkbox" value="" id="final_pubmed" name="pubmed_query[<?php print $gene_rec_name ?>]">                                       
-                                <?php print $gene_rec_name; //only if not "-" ?>                    
+                                <input type="checkbox" class="check_good" value="" id="final_pubmed" name="pubmed_query[<?php print $gene_rec_name ?>]">                                       
+                                <?php print $gene_rec_name; //only if not "-" ?>     
+                                <br>
                             <?php
                             }
                         }  
@@ -314,8 +309,9 @@ foreach ($items as $t) {
             foreach ($array[$s][$t] as $final){ ?>
 
                 <?php if ($final == "-"){  continue; } ?>
-                <input type="checkbox" class="checkbox" value="" id="final_pubmed" name="pubmed_query[<?php print $final ?>]">                                       
+                <input type="checkbox" class="check_good" value="" id="final_pubmed" name="pubmed_query[<?php print $final ?>]">                
                 <?php print $final; //only if not "-" ?>  
+                <br>
 
             <?php    
             }
@@ -332,7 +328,7 @@ foreach ($items as $t) {
 
 <script>
 var select_all = document.getElementById("select_all"); //select all checkbox
-var checkboxes = document.getElementsByClassName("checkbox"); //checkbox items
+var checkboxes = document.getElementsByClassName("check_good"); //checkbox items
 
 
 select_all.addEventListener("change", function(e){
