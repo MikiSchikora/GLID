@@ -1,5 +1,7 @@
 <?php
-// THIS CODE IS FOR SEARCHING ALL
+// THIS CODE IS FOR SEARCHING ALL BUT INCLUDING GO TERMINOLOGY, NO ORTHOLOGUES
+// IT ALSO INCLUDES SOME TOOLS FOR AVOIDING PRINTING UNNECESSARY THINGS
+
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
@@ -8,21 +10,14 @@ include "select_species.inc.php";
 
 //Store input data in $_SESSION to reaload initial form if necessary
 $_SESSION['queryData'] = $_REQUEST;
-//If I want to redirect the query to another script
-//if ($_REQUEST['myQuery']) {
-//    header('Location: search.php?myQuery=' . $_REQUEST['myQuery']);
-//}
 
-$array;
-$info;
-$items=array();
+$array; // contains everything
+$items=array(); // the interesting keys of array[SpecieX]
 $something_printed=0;
 
 // Loop through species
 foreach ($Species as $Specie){
-$info=array();
-//    $geneRecName = Null;
-//    $protRecName = Null;
+    $info=array(); // information for the search
 
     // Get information about your query in your specie:
     
@@ -32,36 +27,44 @@ $info=array();
         . "AND sp.common_name like '%".$Specie."%' AND (g.gene_recommended_name = '".$query."' OR gsyn.name_genesynonym = '".$query."' OR g.id_ENTREZGENE = '".$query."' OR psyn.name_proteinsynonym = '".$query."' OR p.prot_recommended_name = '".$query."' OR p.id_Uniprot = '".$query."');";       
     
     $rs = mysqli_query($mysqli, $sql) or print mysqli_error($mysqli); 
-    
-
-    
-    
+         
     $GeneSynonyms = array();
     $ProteinSynonyms = array();
     $geneRecName=array();
-    $protRecName=array();
-    
+    $protRecName=array(); 
     $GeneID= array();      
     $ProteinID=array();
 
-
+    $GO_terms= array(); // an array cointaining the GO decription and type of this gene. 
+    $GO_terms['C'] = array(); $GO_terms['F'] = array(); $GO_terms['P'] = array(); 
+    $GO_similar_genes= array(); // an array cointaining arrays of genes with similar function
+    $GO_similar_genes['C'] = array(); $GO_similar_genes['F'] = array(); $GO_similar_genes['P'] = array(); 
+    
+    // Save an empty array if the search is empty
     if (!mysqli_num_rows($rs)) { 
         $info["Gene recommended name"]=$geneRecName;
         $info["Protein recommended name"]=$protRecName;
         $info["Gene synonyms"]=$GeneSynonyms;
         $info["Protein synonyms"]=$ProteinSynonyms;
+        $info["Gene Orthologues"]=$ProteinSynonyms;
+        $info["GO terms"]=$GO_terms;
+        $info["GO_similar_genes"]=$GO_similar_genes;
+        
+        
+        
         //// AQUÍ FALTEN LA RESTA D'ITEMS !!!!!! ORTOLEGS ET AL
         $array[$Specie]= $info;
 
-        continue;
+        continue; // go to the next specie
     }
-    
-    
-
-
+    elseif (isset($_SESSION['queryData']['RecName']) or isset($_SESSION['queryData']['Synonyms']) or isset($_SESSION['queryData']['Orthologues']) or isset($_SESSION['queryData']['Pfam']) or isset($_SESSION['queryData']['GO'])){
+         $something_printed = 1;        
+    }
+     
+    // save things of the initial search 
     $i=0;
     while ($rsF = mysqli_fetch_array($rs)) {
-        while ($i===0){
+        if ($i===0){ 
             $geneRecName[] = $rsF['gene_recommended_name'];
             $protRecName[] = $rsF['prot_recommended_name'];
             $GeneID[] = $rsF['id_ENTREZGENE'];      
@@ -72,63 +75,86 @@ $info=array();
         $GeneSynonyms[] = $rsF['name_genesynonym'];
         $ProteinSynonyms[] = $rsF['name_proteinsynonym'];
         
-    } 
- 
-    
+    }     
     $GeneSynonyms=  array_unique($GeneSynonyms);
     $ProteinSynonyms=  array_unique($ProteinSynonyms);
-
     
-    //RECCOMENDED NAMES:
     
-    if(isset($_REQUEST['RecName'])){  
+    // add things to $info and $items if selected
+      
+    //RECCOMENDED NAMES:  
+    if(isset($_SESSION['queryData']['RecName'])){  
+        $info["Gene recommended name"]=$geneRecName;
+        $items[]="Gene recommended name";
         
-        if ($protRecName or $geneRecName){
-            $something_printed = 1;
-            //$info['Specie']=$Specie;   
-            if ($geneRecName){
-                $info["Gene recommended name"]=$geneRecName;
-                $items[]="Gene recommended name";
-            }
-            if ($protRecName){
-                $info["Protein recommended name"]=$protRecName;
-                $items[]="Protein recommended name";            
-            }
-        }
-    
+        $info["Protein recommended name"]=$protRecName;
+        $items[]="Protein recommended name";                 
     }
     
-    if(isset($_REQUEST['Synonyms'])){
+    // SYNONYMS   
+    if(isset($_SESSION['queryData']['Synonyms'])){
+        $info["Gene synonyms"]=$GeneSynonyms;
+        $items[]="Gene synonyms";
         
-        //print "here go synonyms<br>";
-        if ($GeneSynonyms or $ProteinSynonyms){
-            $something_printed = 1;
-            if ($GeneSynonyms){
-                $info["Gene synonyms"]=$GeneSynonyms;
-                $items[]="Gene synonyms";
-            }
-            if ($ProteinSynonyms){
-                $info["Protein synonyms"]=$ProteinSynonyms;
-                $items[]="Protein synonyms";
-            }
-        }
-        
+        $info["Protein synonyms"]=$ProteinSynonyms;
+        $items[]="Protein synonyms";       
     }  
     
-    
-    
-    
-    
-    
-    
-    
+    // GENE ONTOLOGY
+    if(isset($_SESSION['queryData']['GO'])){   
         
-    // FROM HERE IT IS NEW
+        // get the GO terms of this protein and the IDs of the similar GOs.
+        
+        $sql = "SELECT  GO.name, GO.type, sGO.id_Uniprot_similar, sGO.Type_GO FROM GeneOntology GO, Proteins_has_GeneOntology PhGO, Proteins P, Similar_GO sGO ".
+               "WHERE GO.id_GO = PhGO.GeneOntology_id_GO AND PhGO.Proteins_id_Uniprot = P.id_Uniprot AND P.id_Uniprot = sGO.id_Uniprot ".
+               "AND P.id_Uniprot = '".$ProteinID[0]."'";
+        
+        $rs = mysqli_query($mysqli, $sql) or print mysqli_error($mysqli); 
+        
+        $Similar_Proteins = array(); // array of the id_Uniprot of the proteins with similar GO terms 
+        $Similar_Proteins['C'] = array(); $Similar_Proteins['F'] = array(); $Similar_Proteins['P'] = array();       
+                
+        while ($rsF = mysqli_fetch_array($rs)){   
+            
+            if($rsF['name'] != "-"){
+                $type = $rsF['type'];
+                $GO_terms[$type][] = $rsF['name'];
+            }
+            $Type_SimilarProtein = $rsF['Type_GO'];
+            $Similar_Proteins[$Type_SimilarProtein][] = $rsF['id_Uniprot_similar'];                
+        }
+
+        foreach (array('C','F','P') as $type){
+            $Similar_Proteins[$type] = array_unique($Similar_Proteins[$type]);
+            $GO_terms[$type] = array_unique($GO_terms[$type]);
+        }
+        
+        // generate the array that cointains the gene names of all the similar genes $GO_similar_genes (contains id_Uniprot and gene name):
+        
+        foreach (array('C','F','P') as $type){
+            foreach ($Similar_Proteins[$type] as $Prot_ID){
+            
+                // get the gene name
+                $sql = "SELECT G.gene_recommended_name FROM Gene G, Proteins P WHERE G.id_ENTREZGENE = P.id_ENTREZGENE AND P.id_Uniprot = '".$Prot_ID."'";
+                $rs = mysqli_query($mysqli, $sql) or print mysqli_error($mysqli);
+                $gene_name = mysqli_fetch_row($rs)[0];
+                
+                if ($gene_name != "-"){
+                    $GO_similar_genes[$type][] = $gene_name.";".$Prot_ID;
+                }
+                              
+            }
+        } 
+        
+        // add to $info
+        $info["GO terms"]=$GO_terms;
+        $info["GO similar genes"]=$GO_similar_genes;
+        $items[]="GO terms";
+    }
     
-     
-           
+                   
     // If you want to search for Orthologues
-    if(isset($_REQUEST["Orthologues"])){
+    if(isset($_SESSION['queryData']["Orthologues"])){
         
         //Start with an empty array
         $GeneOrthologues=array();
@@ -198,32 +224,28 @@ $info=array();
         //MAYBE THIS COULD BE PUT INSIDE THE PREVIOUS WHILE!!!
         if ($GeneOrthologues){
                 $something_printed = 1;
-                $info["Gene orthologues"]=$GeneOrthologues;
-                $items[]="Gene orthologues";
+                $info["Gene Orthologues"]=$GeneOrthologues;
+                $items[]="Gene Orthologues";
 
         }  
     }
     
-    // BEFORE THIS IT IS NEW
+    // BEFORE THIS IT IS ORTHOLOGUES
     
     
     
     
     
-    
-    
-    //$Specie;
+    //Add to $array ;
     
     $array[$Specie]= $info;
-
-    
-
-      
-      
+     
 } 
-
-            
+         
 $items=  array_unique($items);
+
+
+// PRINT 
 
 ?>
 
@@ -235,24 +257,70 @@ $items=  array_unique($items);
     
 <?php
 foreach ($items as $t) {
-    print "<br><h3>".$t."</h3>"; //only if $array[$s][$t] is not empty
+    print "<h1>".$t."</h1>"; //only if $array[$s][$t] is not empty
            
     foreach ($Species as $s){
-        print "<br><h4>".$s."</h4><br>";
-        foreach ($array[$s][$t] as $final){
-            ?>
-               
-                   <input type="checkbox" class="checkbox" value="" id="final_pubmed" name="pubmed_query[<?php print $final ?>]">                        
-                      <?php 
-                      print $final; //only if not "-"
-                       ?>                        
-               
-           <?php
+ 
+        if ($t=="GO terms"){     
+                       
+            $specie_printed = 0;
+            
+            foreach (array('C','F','P') as $type){
+                
+                if ($type=="C"){ $name = "Component";}
+                if ($type=="F"){ $name = "Molecular Function";}
+                if ($type=="P"){ $name = "Biological Process";}
+                
+                if (!empty($array[$s]["GO terms"][$type]) and (count($array[$s]["GO terms"][$type])>1 or  $array[$s]["GO terms"][$type][0]!="-")){
+                    
+                    if ($specie_printed===0){
+                        print "<br><h4>".$s."</h4><br>";
+                        $specie_printed=1;
+                    }
+                    
+                    print "<h5>This gene has the following ".$name." GO terms:</h5><br>";
+                    // print the GO term names
+                    foreach($array[$s]["GO terms"][$type] as $term){
+                        if ($term != "-"){
+                            print "<p>".$term."</p>";
+                        }
+                    }  print "<br>";                                   
+                
+                    if (!empty($array[$s]["GO similar genes"][$type]) and (count($array[$s]["GO similar genes"][$type])>1 or  $array[$s]["GO similar genes"][$type][0]!="-")){                
+                        // print the similar genes:
+                        print "<h5>Genes with a similar ".$name." in this specie are...</h5><br>";
+                        foreach($array[$s]["GO similar genes"][$type] as $sim_gene){
+
+                            $gene_rec_name = explode(";",$sim_gene)[0];
+                            if ($gene_rec_name != "-"){
+                            ?>                    
+                                <input type="checkbox" class="checkbox" value="" id="final_pubmed" name="pubmed_query[<?php print $gene_rec_name ?>]">                                       
+                                <?php print $gene_rec_name; //only if not "-" ?>                    
+                            <?php
+                            }
+                        }  
+                    }                               
+                }                                
+            }           
+        }       
+        else{          
+            
+            // print specie header:
+            
+            if (!empty($array[$s][$t]) and (count($array[$s][$t])>1 or $array[$s][$t][0]!="-")){     
+                print "<br><h4>".$s."</h4><br>";
+            }
+            
+            foreach ($array[$s][$t] as $final){ ?>
+
+                <?php if ($final == "-"){  continue; } ?>
+                <input type="checkbox" class="checkbox" value="" id="final_pubmed" name="pubmed_query[<?php print $final ?>]">                                       
+                <?php print $final; //only if not "-" ?>  
+
+            <?php    
+            }
         }
-
     }
-
-    // function
     ?>
 
 <?php
