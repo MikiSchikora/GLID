@@ -378,7 +378,7 @@ foreach ($items as $t) {
             }           
         }
         
-        if ($t=="Pfam"){
+        elseif ($t=="Pfam"){
           $specie_printed = 0;
           if (!empty($array[$s]['Pfam']['ID'][0]) and (count($array[$s]['Pfam']['ID'])>1 or  $array[$s]['Pfam']['ID'][0]!="-")){
 
@@ -405,6 +405,8 @@ foreach ($items as $t) {
             print "<h4>This protein has the following similar proteins:</h4><br>";
 
             foreach($array[$s]['Pfam']['similar_proteins'] as $simprots){
+                
+                $simprots = explode("_",$simprots)[0];
 
                 ?>
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
