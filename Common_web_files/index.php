@@ -17,7 +17,7 @@ print headerDBW("Home - GLID project");
 
 <div class="container">
 
-    <form name="MainForm" id="mainform-id" autocomplete="off" action="search_all.php" method="POST" enctype="multipart/form-data" class="margin-top">
+    <form name="MainForm" id="mainform-id" autocomplete="off" action="search_all_new.php" method="POST" enctype="multipart/form-data" class="margin-top">
 
     <div class="form-group">
     <label>Enter your query</label>
@@ -186,7 +186,7 @@ print headerDBW("Home - GLID project");
     <div class="form-check">
     <input class="form-check-input" type="checkbox" value="" id="Orthologues" name="Orthologues">
      <label class="form-check-label" for="defaultCheck1">
-     Orthologues
+     Phylogenetically related genes
      </label>
     </div>
 

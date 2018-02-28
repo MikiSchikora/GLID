@@ -1,5 +1,5 @@
 <?php
-// THIS CODE IS FOR SEARCHING ALL BUT INCLUDING GO TERMINOLOGY, NO ORTHOLOGUES
+// THIS CODE IS FOR SEARCHING ALL 
 // IT ALSO INCLUDES SOME TOOLS FOR AVOIDING PRINTING UNNECESSARY THINGS
 
 ini_set('display_errors', 1);
@@ -49,7 +49,7 @@ foreach ($Species as $Specie){
         $info["Protein recommended name"]=$protRecName;
         $info["Gene synonyms"]=$GeneSynonyms;
         $info["Protein synonyms"]=$ProteinSynonyms;
-        $info["Gene Orthologues"]=$FinalGeneOrthologues;
+        $info["Phylogenetically related genes"]=$FinalGeneOrthologues;
         $info["GO terms"]=$GO_terms;
         $info["GO_similar_genes"]=$GO_similar_genes;
         $info["Pfam"]=$Pfam;
@@ -175,7 +175,7 @@ foreach ($Species as $Specie){
         //If there is no ortho cluster for the query gene, create empty array and end
         if (!mysqli_num_rows($cluster_rs)) { 
             //print("YOUR QUERY GENE HAS NO ORTHOLOGUE CLUSTER");
-            $info["Gene Orthologues"]=$FinalGeneOrthologues; //empty array
+            $info["Phylogenetically related genes"]=$FinalGeneOrthologues; //empty array
         
             
         //If there is one or more ortho cluster for the query gene:
@@ -198,7 +198,7 @@ foreach ($Species as $Specie){
             
                 //If there are no results of the ortho cluster appart from original gene
                 if (!mysqli_num_rows($ortho_rs)) { 
-                    $info["Gene Orthologues"]=$GeneOrthologues; //empty array
+                    $info["Phylogenetically related genes"]=$GeneOrthologues; //empty array
                 } else {
  
                     while ($ortho_rsF = mysqli_fetch_array($ortho_rs)) {
@@ -241,8 +241,8 @@ foreach ($Species as $Specie){
     
         // If I have found gene orthologues, I now save it into $info to print it later
 
-        $info["Gene Orthologues"]=$FinalGeneOrthologues;
-        $items[]="Gene Orthologues";
+        $info["Phylogenetically related genes"]=$FinalGeneOrthologues;
+        $items[]="Phylogenetically related genes";
 
          
     }
