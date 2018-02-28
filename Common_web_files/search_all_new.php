@@ -35,6 +35,7 @@ foreach ($Species as $Specie){
     $GeneID= array();      
     $ProteinID=array();
     $FinalGeneOrthologues = array();
+    $Clusters=array();
     $Pfam=array();
     $Pfam['ID'] = array(); $Pfam['similar_proteins'] = array();
 
@@ -50,6 +51,7 @@ foreach ($Species as $Specie){
         $info["Gene synonyms"]=$GeneSynonyms;
         $info["Protein synonyms"]=$ProteinSynonyms;
         $info["Phylogenetically related genes"]=$FinalGeneOrthologues;
+        $info["OrthoDB groups"]=$Clusters;
         $info["GO terms"]=$GO_terms;
         $info["GO_similar_genes"]=$GO_similar_genes;
         $info["Pfam"]=$Pfam;
@@ -160,10 +162,11 @@ foreach ($Species as $Specie){
         
         //Start with an empty array
         $GeneOrthologues=array();
+        $Clusters=array();
                
         // We have $GeneID to link the Gene and Orthologue cluster
         // Get information about the orthologue cluster in your GeneID: 
-        $cluster_sql = "SELECT oc.ortho_cluster "
+        $cluster_sql = "SELECT oc.ortho_cluster, oc.name_cluster "
                 . "FROM Gene g, OrthologueCluster oc, Gene_has_OrthologueCluster goc "
                 . "WHERE g.id_ENTREZGENE = goc.Gene_id_ENTREZGENE "
                 . "AND oc.ortho_cluster = goc.OrthologueCluster_ortho_cluster "
@@ -171,11 +174,13 @@ foreach ($Species as $Specie){
         
         // We look for the ortho cluster at the DB
         $cluster_rs = mysqli_query($mysqli, $cluster_sql) or print mysqli_error($mysqli); 
+        
 
         //If there is no ortho cluster for the query gene, create empty array and end
         if (!mysqli_num_rows($cluster_rs)) { 
             //print("YOUR QUERY GENE HAS NO ORTHOLOGUE CLUSTER");
             $info["Phylogenetically related genes"]=$FinalGeneOrthologues; //empty array
+            $info["OrthoDB groups"]=$Clusters;
         
             
         //If there is one or more ortho cluster for the query gene:
@@ -187,6 +192,8 @@ foreach ($Species as $Specie){
             $i=0;
             while ($cluster_rsF = mysqli_fetch_array($cluster_rs) and $i<10) {
                 $i++;
+                $Clusters[]=$cluster_rsF['ortho_cluster'].": ".$cluster_rsF['name_cluster'];
+                //print $cluster_rsF['ortho_cluster'].": ".$cluster_rsF['name_cluster'];
 
                 // Query MySQL DB now with a ortho cluster every time
                 $ortho_sql = "SELECT g.gene_recommended_name, s.common_name "
@@ -199,6 +206,7 @@ foreach ($Species as $Specie){
                 //If there are no results of the ortho cluster appart from original gene
                 if (!mysqli_num_rows($ortho_rs)) { 
                     $info["Phylogenetically related genes"]=$GeneOrthologues; //empty array
+                    $info["OrthoDB groups"]=$Clusters;
                 } else {
  
                     while ($ortho_rsF = mysqli_fetch_array($ortho_rs)) {
@@ -236,18 +244,20 @@ foreach ($Species as $Specie){
         $FinalGeneOrthologues = array();
         
         foreach($GeneOrthologues_associative as $name => $species){
-            $FinalGeneOrthologues[] = $name."<br><b>found in</b> ".implode(", ",$species)."<br>";
+            $FinalGeneOrthologues[] = $name."<br><b>&nbsp;&nbsp;&nbsp;&nbsp;found in</b> ".implode(", ",$species)."<br>";
         }
     
         // If I have found gene orthologues, I now save it into $info to print it later
+        
 
         $info["Phylogenetically related genes"]=$FinalGeneOrthologues;
+        $info["OrthoDB groups"]=$Clusters;
         $items[]="Phylogenetically related genes";
 
          
     }
     
-    // BEFORE THIS IT IS ORTHOLOGUES
+
         // If you want to search for Similar proteins & Pfam domains
         // If you want to search for Orthologues
     if(isset($_SESSION['queryData']["Pfam"])){
@@ -419,6 +429,29 @@ foreach ($items as $t) {
 //            print($list);
             }
           }
+        }
+        
+        elseif ($t=="Phylogenetically related genes"){
+            if (!empty($array[$s][$t]) and (count($array[$s][$t])>1 or $array[$s][$t][0]!="-")){     
+                print "<br><h3>".$s."</h3><br>"; //print name of specie
+            }
+            print "<h4>This gene is found in the following OrthoDB groups:</h4><br>";
+            foreach ($array[$s]["OrthoDB groups"] as $orthogroup){
+                print "&nbsp;&nbsp;&nbsp;&nbsp;".$orthogroup."<br>";
+            };
+            print "<br>";
+            print "<h4>Genes found within those groups:</h4><br>";
+            foreach ($array[$s][$t] as $final){ ?>
+
+                <?php if ($final == "-"){  continue; } ?>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="checkbox" class="check_good" value="" id="final_pubmed" name="pubmed_query[<?php print explode("<br>",$final)[0] ?>]">                
+                <?php print $final; //only if not "-" ?>  
+                <br>
+
+            <?php    
+            }
+            
         }
         
         // other elseifs
