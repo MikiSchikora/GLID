@@ -13,6 +13,13 @@ print headerDBW("Home - GLID project");
 //Store input data in $_SESSION to reaload initial form if necessary
 $_SESSION['queryData'] = $_REQUEST;
 
+if (isset($_FILES['json']['name'])){
+    $my_json = file_get_contents($_FILES['json']['tmp_name']);
+    $json_decoded = json_decode($my_json, true);
+    $_SESSION['queryPubmed'] = $json_decoded;
+}
+
+else{
 
 $lc_array = array_keys($_REQUEST['pubmed_query']);
 $uc_array = array();
@@ -22,7 +29,7 @@ foreach ($lc_array as $lc){
 $final_query = array_unique($uc_array);
 
 $_SESSION['queryPubmed'] = $final_query;
-
+}
 
 ?>
 

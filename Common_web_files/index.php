@@ -166,6 +166,7 @@ print headerDBW("Home - GLID project");
     autocomplete(document.getElementById("inputtaxonomy"), taxonomy);
 
     </script>
+    
 
     <h2>What do you want to search?</h2>
 
@@ -208,7 +209,14 @@ print headerDBW("Home - GLID project");
     <button type="submit" class="btn btn-primary">Submit</button>
     <button class="btn btn-primary" onclick="window.location.href='index.php?new=1'">New Search</button>
      </form>
-
+ 
+<form name="MainForm" id="mainform-id" autocomplete="off" action="pubmed.php" method="POST" enctype="multipart/form-data" class="margin-top">
+    <h2>Previous searches...</h2>
+    <div class="form-group">
+        Upload json file: <input type="file" name="json" value="" width="50" style="width:100%"/>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
 
 
 </div><!-- /.container -->
