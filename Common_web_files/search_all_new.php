@@ -322,9 +322,7 @@ foreach ($Species as $Specie){
          
 $items=  array_unique($items);
 
-
 // PRINT 
-
 ?>
 
 <form name="MainForm" id="mainform-id" autocomplete="off" action="pubmed.php" method="POST" enctype="multipart/form-data" class="margin-top">
@@ -364,7 +362,9 @@ foreach ($items as $t) {
                     // print the GO term names
                     foreach($array[$s]["GO terms"][$type] as $term){
                         if ($term != "-"){
-                            print "<p> &nbsp;&nbsp;&nbsp;&nbsp;".$term."</p>";
+                            print "<p> &nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href=\"http://amigo.geneontology.org/amigo/search/ontology?q=".urlencode($term)."\" target=\"_blank\">".$term."</a>".
+                                    "</p>";
                         }
                     }  print "<br>";                                   
                 
@@ -390,28 +390,33 @@ foreach ($items as $t) {
         
         elseif ($t=="Pfam"){
           $specie_printed = 0;
-          if (!empty($array[$s]['Pfam']['ID'][0]) and (count($array[$s]['Pfam']['ID'])>1 or  $array[$s]['Pfam']['ID'][0]!="-")){
+          if (!empty($array[$s]['Pfam']['ID'][0]) ){
 
               if ($specie_printed===0){
-                  print "<br><h4>".$s."</h4><br>";
+                  print "<br><h3>".$s."</h3><br>";
                   $specie_printed=1;
               }
 
 //            print_r($array[$Specie]['Pfam']['ID']); #IMPORTANT
             print "<h4>This protein has the following PFAM domains:</h4><br>";
-
-            foreach(explode("|",$array[$s]['Pfam']['ID'][1]) as $pfam_names){
-                    if($pfam_names != "-"){
-                        ?>
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <input type="checkbox" class="check_good" value="" id="final_pubmed" name="pubmed_query[<?php print $pfam_names ?>]">
-                                <?php print $pfam_names; //only if not "-" ?>
-                                <br>
-                            <?php
-
-//                        print($pfam_names);
+            
+            $PFAM_NAMES = explode("|",$array[$s]['Pfam']['ID'][1]);
+            $PFAM_IDs = explode("|",$array[$s]['Pfam']['ID'][0]);
+            
+            foreach(range(0,count($array[$s]['Pfam']['ID'][1])) as $i_pf){    
+                
+                $NAME = $PFAM_NAMES[$i_pf];
+                $ID = $PFAM_IDs[$i_pf];
+                
+                if($NAME != "-"){
+                    print "<p> &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href=\"https://pfam.xfam.org/family/".$ID."\" target=\"_blank\">".$NAME."</a>".                            
+                            "</p>"; 
                 }
             }
+          }
+            
+          if (!empty($array[$s]['Pfam']['similar_proteins'])){
             print "<h4>This protein has the following similar proteins:</h4><br>";
 
             foreach($array[$s]['Pfam']['similar_proteins'] as $simprots){
@@ -419,25 +424,33 @@ foreach ($items as $t) {
                 $simprots = explode("_",$simprots)[0];
 
                 ?>
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <input type="checkbox" class="check_good" value="" id="final_pubmed" name="pubmed_query[<?php print $simprots ?>]">
-                                <?php print $simprots; //only if not "-" ?>
-                                <br>
-                            <?php
-//
-//            $list=implode(",", $array[$Specie]['Pfam']['similar_proteins']);
-//            print($list);
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="checkbox" class="check_good" value="" id="final_pubmed" name="pubmed_query[<?php print $simprots ?>]">
+                    <?php print $simprots; //only if not "-" ?>
+                    <br>
+                <?php
+
             }
           }
+          
         }
         
         elseif ($t=="Phylogenetically related genes"){
             if (!empty($array[$s][$t]) and (count($array[$s][$t])>1 or $array[$s][$t][0]!="-")){     
                 print "<br><h3>".$s."</h3><br>"; //print name of specie
-            }
+            
+           
             print "<h4>This gene is found in the following OrthoDB groups:</h4><br>";
             foreach ($array[$s]["OrthoDB groups"] as $orthogroup){
-                print "&nbsp;&nbsp;&nbsp;&nbsp;".$orthogroup."<br>";
+                $ortho_id = explode(":",$orthogroup)[0];
+                $ortho_name = trim(explode(":",$orthogroup)[1]);
+                
+                print "<p> &nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href=\"http://www.orthodb.org/?query=".$ortho_id."\" target=\"_blank\">".$ortho_name."</a>".                            
+                    "</p>"; 
+                
+                
+                //print "&nbsp;&nbsp;&nbsp;&nbsp;".$orthogroup."<br>";
             };
             print "<br>";
             print "<h4>Genes found within those groups:</h4><br>";
@@ -451,14 +464,13 @@ foreach ($items as $t) {
 
             <?php    
             }
+            }
             
         }
         
         // other elseifs
         else{          
-            
-            
-            
+ 
             // print specie header:
             
             if (!empty($array[$s][$t]) and (count($array[$s][$t])>1 or $array[$s][$t][0]!="-")){     
@@ -484,6 +496,8 @@ foreach ($items as $t) {
 }?>
                    
     <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="submit" formaction="my_json.php" class="btn btn-primary">Download json array</button>
+    
 </form>    
 
 <script>
