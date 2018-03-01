@@ -13,24 +13,38 @@ print headerDBW("Home - GLID project");
 //Store input data in $_SESSION to reaload initial form if necessary
 $_SESSION['queryData'] = $_REQUEST;
 
-//If I want to redirect the query to another script
-//if ($_REQUEST['myQuery']) {
-//    header('Location: search.php?myQuery=' . $_REQUEST['myQuery']);
-//}
+if (isset($_FILES['json']['name'])){
+    $my_json = file_get_contents($_FILES['json']['tmp_name']);
+    $json_decoded = json_decode($my_json, true);
+    $_SESSION['queryPubmed'] = $json_decoded;
+}
 
-$query=Array();
+else{
 
-$query=$_REQUEST;
-print_r($query);
+$lc_array = array_keys($_REQUEST['pubmed_query']);
+$uc_array = array();
+foreach ($lc_array as $lc){
+    $uc_array[] = strtoupper($lc);
+}
+$final_query = array_unique($uc_array);
 
-//if(isset($_REQUEST['pubmed'])){
-//    $query=$_REQUEST['pubmed'];
-//    print($query);
-////    print "<a href=\"https://www.ncbi.nlm.nih.gov/pubmed/?term=$query\">Query Pubmed</a>";
-////    print($query);  
-////    print "<a href=\"https://www.ncbi.nlm.nih.gov/pubmed/?term=p53\">Query Pubmed</a>";
-////    print($query);
-//      
-//}
+$_SESSION['queryPubmed'] = $final_query;
+}
+
+?>
+
+<form name="MainForm" id="mainform-id" autocomplete="off" action="query_pubmed.php" method="POST" enctype="multipart/form-data" class="margin-top">
+          
+      <div class="form-group">
+        <label>Add some extra keywords <b>If necessary</b></label>
+        <input type="text" class="form-control" id="query" name="Keywords" value="" placeholder= "Write here some extra keywords in Google-like syntax"> <!-- value="<?php //print $_SESSION['queryData']['query'] ?>" -->
+      </div>
+     
+     <button type="submit" class="btn btn-primary">Submit to PUBMED</button>
+     
+</form>
+            
+<?php           
+            
 
 print footerDBW();
