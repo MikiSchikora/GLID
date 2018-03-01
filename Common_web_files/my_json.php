@@ -13,7 +13,12 @@ include "globals.inc.php";
 //Store input data in $_SESSION to reaload initial form if necessary
 $_SESSION['queryData'] = $_REQUEST;
 
-$lc_array = array_keys($_REQUEST['pubmed_query']);
+if (!isset($_SESSION['queryData']['pubmed_query'])){
+    print "<h3> You have to select something. <a href=\"./index.php\">Back to home</a> </h3>";
+    exit(0);
+}
+
+$lc_array = array_keys($_SESSION['queryData']['pubmed_query']);
 $uc_array = array();
 foreach ($lc_array as $lc){
     $uc_array[] = strtoupper($lc);
