@@ -18,9 +18,7 @@ else{
     $query = "(\"".implode("\" OR \"",$Names)."\")";
 }
 $final_query = str_replace(" ","+",$query);
-$pubmed_url =  str_replace('"','|','https://www.ncbi.nlm.nih.gov/pubmed/?term='.$final_query);
-
-$url = "https://www.ncbi.nlm.nih.gov/pubmed/?term=".$final_query."&report=MEDLINE&format=text&dispmax=200";
+$url = "https://www.ncbi.nlm.nih.gov/pubmed/?term=".$final_query."&report=MEDLINE&format=text&dispmax=10";
 
 // load the content of the pubmed result into an array of arrays:
 $pubmed_content_array = explode("\n",file_get_contents($url));
@@ -123,10 +121,11 @@ print $t_body;
 
 <!-- Add the link to the pubmed-->
 <br><br><br>
-<h3> You can also <a href=" <?php echo $pubmed_url; ?>" target="_blank">Query Pubmed</a> directly...</h3>
+<h3> You can also 
+    <?php echo '<a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=', urlencode($query), '" target=\"_blank\">Query Pubmed</a> ' ?>
+directly...</h3>
 
 <br><br><br>
-
 
 <?php print footerDBW(); ?>
 
