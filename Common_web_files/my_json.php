@@ -22,7 +22,6 @@ $final_query = array_unique($uc_array);
 
 $_SESSION['json'] = $final_query;
 $final_query_json = json_encode($final_query);
-file_put_contents('json_array.txt', $final_query_json);
 
 header('Content-Disposition: attachment; filename=json_array.txt');
 header('Content-Type: application/json');
