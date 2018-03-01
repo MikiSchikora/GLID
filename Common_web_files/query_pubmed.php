@@ -18,7 +18,7 @@ else{
     $query = "(\"".implode("\" OR \"",$Names)."\")";
 }
 $final_query = str_replace(" ","+",$query);
-$url = "https://www.ncbi.nlm.nih.gov/pubmed/?term=".$final_query."&report=MEDLINE&format=text&dispmax=10";
+$url = "https://www.ncbi.nlm.nih.gov/pubmed/?term=".$final_query."&report=MEDLINE&format=text&dispmax=100";
 
 // load the content of the pubmed result into an array of arrays:
 $pubmed_content_array = explode("\n",file_get_contents($url));
@@ -79,9 +79,9 @@ print headerDBW("PUBMED RESULTS");
 
 ?>
 
-<br><br><br>
-<h3> These are the first 200 papers that match your search in PUBMED...</h3>
-<br><br><br>
+<br>
+<h4> These are the first 100 papers that match your search in PUBMED...</h4>
+<br>
 
 <div class="container-fluid">
                         <table class= "table table-hover" id="pubmedTable">
@@ -120,12 +120,12 @@ print $t_body;
 </script>
 
 <!-- Add the link to the pubmed-->
-<br><br><br>
-<h3> You can also 
+<br><br>
+<h4> You can also 
     <?php echo '<a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=', urlencode($query), '" target=\"_blank\">Query Pubmed</a> ' ?>
-directly...</h3>
+directly...</h4>
 
-<br><br><br>
+<br><br>
 
 <?php print footerDBW(); ?>
 
