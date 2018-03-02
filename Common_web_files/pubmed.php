@@ -31,18 +31,40 @@ $final_query = array_unique($uc_array);
 $_SESSION['queryPubmed'] = $final_query;
 }
 
+// Generate a string with the query names:
+
+$Names_text = " AND (\"".implode("\" OR \"",$_SESSION['queryPubmed'])."\")";
+
 ?>
 
 <form name="MainForm" id="mainform-id" autocomplete="off" action="query_pubmed.php" method="POST" enctype="multipart/form-data" class="margin-top">
           
-      <div class="form-group">
+      <div class="form-group" id="form-group">
         <label>Add some extra keywords <b>If necessary</b></label>
-        <input type="text" class="form-control" id="query" name="Keywords" value="" placeholder= "Write here some extra keywords in Google-like syntax"> <!-- value="<?php //print $_SESSION['queryData']['query'] ?>" -->
+        <input type="text" class="form-control" id="query" name="Keywords" value="" placeholder= "Write here some extra keywords in PubMed-like syntax"> <!-- value="<?php //print $_SESSION['queryData']['query'] ?>" -->
       </div>
      
      <button type="submit" class="btn btn-primary">Submit to PUBMED</button>
      
 </form>
+
+<br><br>
+<p>If you are not familiar with the PubMed-like keyword syntax <a href="https://www.youtube.com/watch?v=eEY1r_GDzcg" target="_blank">click here</a> for help</p>
+<br><br>
+
+<p><b>This is how your query will look like in PubMed</b></p>
+
+<!-- Box with the keywords -->
+<span class='printchatbox'></span>
+<script type="text/javascript">
+    $('.form-control').keyup(function(event) {
+       newText = event.target.value;
+       $('.printchatbox').text(newText);
+    });
+  
+    var names = <?php print json_encode($Names_text); ?>;
+    document.write(names);
+</script>
             
 <?php           
             
