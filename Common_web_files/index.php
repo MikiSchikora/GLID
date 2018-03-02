@@ -170,40 +170,105 @@ print headerDBW("Home - GLID project");
 
     <h2>What do you want to search?</h2>
 
-    <div class="form-check">
+    <div class="form-check" id="RecName">
     <input class="form-check-input" type="checkbox" value="" id="RecName" name="RecName">
      <label class="form-check-label" for="defaultCheck1">
      Recommended gene/protein name
      </label>
+     <div id="popup_recname" style="display: none">
+         <p><i>You will obtain the recommended name, if there is one. Recommended names are retrieved from the UniProt consortium and HGNC (HUGO Gene Nomenclature Commitee).</i></p>
     </div>
+    </div>
+    
+    <script>      
+    var e = document.getElementById('RecName');
+    e.onmouseover = function() {
+        document.getElementById('popup_recname').style.display = 'block';
+    }
+    e.onmouseout = function() {
+        document.getElementById('popup_recname').style.display = 'none';
+    }
+    </script>
 
-    <div class="form-check">
+    <div class="form-check" id ="Synonyms">
     <input class="form-check-input" type="checkbox" value="" id="Synonyms" name="Synonyms">
      <label class="form-check-label" for="defaultCheck1">
      Synonyms
      </label>
+    <div id="popup_syn" style="display: none">
+         <p><i>Obtain a list of all the synonyms. From that list, you can select as many as you wish and then proceed to download a JSON file with them and/or query PubMed to maximise your literature search results. The list of all synonyms is retrieved from the UniProt and EntrezGene consortiums</i></p>
     </div>
+    </div>
+    
+    <script>      
+    var e = document.getElementById('Synonyms');
+    e.onmouseover = function() {
+        document.getElementById('popup_syn').style.display = 'block';
+    }
+    e.onmouseout = function() {
+        document.getElementById('popup_syn').style.display = 'none';
+    }
+    </script>
 
-    <div class="form-check">
+    <div class="form-check" id="Orthologues">
     <input class="form-check-input" type="checkbox" value="" id="Orthologues" name="Orthologues">
      <label class="form-check-label" for="defaultCheck1">
      Phylogenetically related genes
      </label>
+    <div id="popup_orth" style="display: none">
+         <p><i>Retrieve a list of all phylogenetically related genes annotated inside an OrthoDB group. From that list, you can select as many as you wish and then proceed to download a file with them and/or query PubMed to maximise your literature search results.</i></p>
+    </div>   
     </div>
+    
+    <script>      
+    var e = document.getElementById('Orthologues');
+    e.onmouseover = function() {
+        document.getElementById('popup_orth').style.display = 'block';
+    }
+    e.onmouseout = function() {
+        document.getElementById('popup_orth').style.display = 'none';
+    }
+    </script>
 
-    <div class="form-check">
+    <div class="form-check" id="Pfam">
     <input class="form-check-input" type="checkbox" value="" id="Pfam" name="Pfam">
      <label class="form-check-label" for="defaultCheck1">
      Similar proteins (same PFAM domains)
      </label>
+    <div id="popup_Pfam" style="display: none">
+         <p><i>Retrieve a list of all the described proteins which have the exact same PFAM domains in a given specie. From that list, you can select as many as you wish and then proceed to download a file with them and/or query PubMed to maximise your literature search results.</i></p>
     </div>
+    </div>  
+ 
+    <script>      
+    var e = document.getElementById('Pfam');
+    e.onmouseover = function() {
+        document.getElementById('popup_Pfam').style.display = 'block';
+    }
+    e.onmouseout = function() {
+        document.getElementById('popup_Pfam').style.display = 'none';
+    }
+    </script>   
 
-    <div class="form-check">
+    <div class="form-check" id="GO">
     <input class="form-check-input" type="checkbox" value="" id="GO" name="GO">
      <label class="form-check-label" for="defaultCheck1">
      Similar function (Gene Ontology)
      </label>
+    <div id="popup_GO" style="display: none">
+         <p><i>Obtain a list of all the described genes which, for all the different types of Gene Ontology terms (Cellular Component, Molecular Function, Biological Process), have at least a 80% of intersection with the query. From that list, you can select as many as you wish and then proceed to download a file with them and/or query PubMed to maximise your literature search results.</i></p>
     </div>
+    </div>
+    
+    <script>      
+    var e = document.getElementById('GO');
+    e.onmouseover = function() {
+        document.getElementById('popup_GO').style.display = 'block';
+    }
+    e.onmouseout = function() {
+        document.getElementById('popup_GO').style.display = 'none';
+    }
+    </script>    
                 
     <p></p>
     <button type="submit" class="btn btn-primary">Submit</button>
