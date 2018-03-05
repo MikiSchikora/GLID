@@ -1,4 +1,4 @@
-<?php
+    <?php
 // THIS CODE IS FOR SEARCHING ALL 
 // IT ALSO INCLUDES SOME TOOLS FOR AVOIDING PRINTING UNNECESSARY THINGS
 
@@ -13,35 +13,7 @@ $_SESSION['queryData'] = $_REQUEST;
 
 ?>
 
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-</head>
-<body>
-<!-- Sidebar -->
-<div class="w3-sidebar w3-light-grey w3-bar-block" style="width:15%;margin-left:-70px">
-    
-  <?php if (isset($_SESSION['queryData']['RecName'])){ ?>             
-    <a href="#GRN" class="w3-bar-item w3-button">Gene Recommended Name</a>
-    <a href="#PRN" class="w3-bar-item w3-button">Protein Recommended Name</a> 
-  <?php } ?>
-    
-  <?php if (isset($_SESSION['queryData']['Synonyms'])){ ?>  
-    <a href="#GS" class="w3-bar-item w3-button">Gene Synonyms</a>
-    <a href="#PS" class="w3-bar-item w3-button">Protein Synonyms</a>  
-  <?php } ?>
-  <?php if (isset($_SESSION['queryData']['GO'])){ ?>
-    <a href="#GO" class="w3-bar-item w3-button">Similar function (GO)</a>
-  <?php } ?>
-  <?php if (isset($_SESSION['queryData']['Orthologues'])){ ?>
-    <a href="#Phylo" class="w3-bar-item w3-button">Phylogenetically related genes</a>
-  <?php } ?>
-  <?php if (isset($_SESSION['queryData']['Pfam'])){ ?> 
-    <a href="#Pfam" class="w3-bar-item w3-button">Similar proteins (PFAM)</a>
-  <?php } ?>
-    
-</div>
+
 
 <div style="margin-left:15%">
 
@@ -281,7 +253,7 @@ foreach ($Species as $Specie){
         $FinalGeneOrthologues = array();
         
         foreach($GeneOrthologues_associative as $name => $species){
-            $FinalGeneOrthologues[] = $name."<br><b>&nbsp;&nbsp;&nbsp;&nbsp;found in</b> ".implode(", ",$species)."<br>";
+            $FinalGeneOrthologues[] = $name."<br><b>found in</b> ".implode(", ",$species)."<br>";
         }
     
         // If I have found gene orthologues, I now save it into $info to print it later
@@ -360,24 +332,86 @@ foreach ($Species as $Specie){
 $items=  array_unique($items);
 
 // PRINT 
+
+// Debug if you didn't find anything
+if ($something_printed===0){
+    print(" <br><h4> Your search gave no results <br><br></4>");?>
+
+<p><button class="btn btn-primary" onclick="window.location.href='index.php?new=1'">New Search</button></p>
+
+    <?php
+  
+} else {
 ?>
 
-<form name="MainForm" id="mainform-id" autocomplete="off" action="pubmed.php" method="POST" enctype="multipart/form-data" class="margin-top">
+<!-- Sidebar -->
+<div class="w3-sidebar w3-light-grey w3-bar-block" style="width:15%;margin-left:-70px">
+    
+  <?php if (isset($_SESSION['queryData']['RecName'])){ ?>             
+    <a href="#GRN" class="w3-bar-item w3-button">Gene Recommended Name</a>
+    <a href="#PRN" class="w3-bar-item w3-button">Protein Recommended Name</a> 
+  <?php } ?>
+    
+  <?php if (isset($_SESSION['queryData']['Synonyms'])){ ?>  
+    <a href="#GS" class="w3-bar-item w3-button">Gene Synonyms</a>
+    <a href="#PS" class="w3-bar-item w3-button">Protein Synonyms</a>  
+  <?php } ?>
+  <?php if (isset($_SESSION['queryData']['GO'])){ ?>
+    <a href="#GO" class="w3-bar-item w3-button">Similar function (GO)</a>
+  <?php } ?>
+  <?php if (isset($_SESSION['queryData']['Orthologues'])){ ?>
+    <a href="#Phylo" class="w3-bar-item w3-button">Phylogenetically related genes</a>
+  <?php } ?>
+  <?php if (isset($_SESSION['queryData']['Pfam'])){ ?> 
+    <a href="#Pfam" class="w3-bar-item w3-button">Similar proteins (PFAM)</a>
+  <?php } ?>
+    
+</div>
+
+<form name="MainForm" id="mainform-id" autocomplete="off" action="pubmed.php" method="POST" target="_blank" enctype="multipart/form-data" class="margin-top">
 
 <!-- <div class="form-check">-->
-    <input type="checkbox" id="select_all"/> Select All
+    <input type="checkbox" id="select_all"/> Select All<br>
 <!--</div>-->
          
 <?php
 foreach ($items as $t) {?>
-    <div class="w3-container w3-teal" style="margin-left:-3px;margin-right:-3px">
+<br>
+    <div class="w3-container" style="margin-left:-3px;margin-right:-3px;background-color: #337ab7;color: #fff;">
+        
+
+        <?php
+        if ($t=="Protein synonyms"){
+                ?><section id="PS"</section><?php 
+        }
+        elseif ($t=="Gene synonyms"){
+                ?><section id="GS"</section><?php 
+        }
+        elseif ($t=="Protein recommended name"){
+                ?><section id="PRN"</section><?php 
+        }
+        elseif ($t=="Gene recommended name"){
+                ?><section id="GRN"</section><?php
+        }
+        elseif ($t=="GO terms"){
+            ?><section id="GO"</section><?php
+        }
+        elseif ($t=="Pfam"){
+            ?><section id="Pfam"</section><?php 
+        }
+        elseif ($t=="Phylogenetically related genes"){
+            ?><section id="Phylo"</section><?php 
+        }
+        ?>
+                
         <h2><?php print $t?></h2>
-        </div><div class="outline"><?php
+
+
+        </div><div class="outline" style="padding-left: 20px;"><?php
            
     foreach ($Species as $s){
 
         if ($t=="GO terms"){
-            ?><section id="GO"</section><?php  
                        
             $specie_printed = 0;
             
@@ -391,11 +425,11 @@ foreach ($items as $t) {?>
                     
                     if ($specie_printed===0){
                         ?> &nbsp;&nbsp;&nbsp;&nbsp; <?php
-                        print " <h3> ".$s."</h3><br>";
+                        print " <h4><b>".$s."</b></h4><br>";
                         $specie_printed=1;
                     }
                     
-                    print "<h4>This gene has the following ".$name." GO terms:</h4><br>";
+                    print "<h5>This gene has the following ".$name." GO terms:</h5><br>";
                     // print the GO term names
                     foreach($array[$s]["GO terms"][$type] as $term){
                         if ($term != "-"){
@@ -407,7 +441,7 @@ foreach ($items as $t) {?>
                 
                     if (!empty($array[$s]["GO similar genes"][$type]) and (count($array[$s]["GO similar genes"][$type])>1 or  $array[$s]["GO similar genes"][$type][0]!="-")){                
                         // print the similar genes:
-                        print "<h4>Genes with a similar ".$name." in this specie are...</h4><br>";
+                        print "<h5>Genes with a similar ".$name." in this specie are...</h5><br>";
                         foreach($array[$s]["GO similar genes"][$type] as $sim_gene){
 
                             $gene_rec_name = explode(";",$sim_gene)[0];
@@ -420,23 +454,24 @@ foreach ($items as $t) {?>
                             <?php
                             }
                         }  
+                        ?><br><?php 
                     }                               
                 }                                
-            }           
+            }  
+                    
         }
         
         elseif ($t=="Pfam"){
-            ?><section id="Pfam"</section><?php  
           $specie_printed = 0;
           if (!empty($array[$s]['Pfam']['ID'][0]) ){
 
               if ($specie_printed===0){
-                  print "<br><h3>".$s."</h3><br>";
+                  print "<br><h4><b>".$s."</b></h4><br>";
                   $specie_printed=1;
               }
 
 //            print_r($array[$Specie]['Pfam']['ID']); #IMPORTANT
-            print "<h4>This protein has the following PFAM domains:</h4><br>";
+            print "<h5>This protein has the following PFAM domains:</h5><br>";
             
             $PFAM_NAMES = explode("|",$array[$s]['Pfam']['ID'][1]);
             $PFAM_IDs = explode("|",$array[$s]['Pfam']['ID'][0]);
@@ -455,7 +490,7 @@ foreach ($items as $t) {?>
           }
             
           if (!empty($array[$s]['Pfam']['similar_proteins'])){
-            print "<h4>This protein has the following similar proteins:</h4><br>";
+            print "<h5>This protein has the following similar proteins:</h5><br>";
 
             foreach($array[$s]['Pfam']['similar_proteins'] as $simprots){
                 
@@ -469,17 +504,17 @@ foreach ($items as $t) {?>
                 <?php
 
             }
+            ?><br><?php
           }
           
         }
         
         elseif ($t=="Phylogenetically related genes"){
-            ?><section id="Phylo"</section><?php  
             if (!empty($array[$s][$t]) and (count($array[$s][$t])>1 or $array[$s][$t][0]!="-")){     
-                print "<br><h3>".$s."</h3><br>"; //print name of specie
+                print "<br><h4><b>".$s."</b></h4><br>"; //print name of specie
             
            
-            print "<h4>This gene is found in the following OrthoDB groups:</h4><br>";
+            print "<h5>This gene is found in the following OrthoDB groups:</h5><br>";
             foreach ($array[$s]["OrthoDB groups"] as $orthogroup){
                 $ortho_id = explode(":",$orthogroup)[0];
                 $ortho_name = trim(explode(":",$orthogroup)[1]);
@@ -492,7 +527,7 @@ foreach ($items as $t) {?>
                 //print "&nbsp;&nbsp;&nbsp;&nbsp;".$orthogroup."<br>";
             };
             print "<br>";
-            print "<h4>Genes found within those groups:</h4><br>";
+            print "<h5>Genes found within those groups:</h5><br>";
             foreach ($array[$s][$t] as $final){ ?>
 
                 <?php if ($final == "-"){  continue; } ?>
@@ -503,107 +538,46 @@ foreach ($items as $t) {?>
 
             <?php    
             }
+            ?><br><?php
             }
             
         }
         
         // other elseifs
         else{
-            if ($t=="Gene recommended name"){
-                ?><section id="GRN"</section><?php                    
- 
+     
             // print specie header:
             
             if (!empty($array[$s][$t]) and (count($array[$s][$t])>1 or $array[$s][$t][0]!="-")){     
-                print "<br><h3>".$s."</h3><br>";
-            }
+                print "<br><h4><b>".$s."</b></h4><br>";
             
-            foreach ($array[$s][$t] as $final){ ?>
+                foreach ($array[$s][$t] as $final){ ?>
 
-                <?php if ($final == "-"){  continue; } ?>
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                <input type="checkbox" class="check_good" value="" id="final_pubmed" name="pubmed_query[<?php print explode("<br>",$final)[0] ?>]">                
-                <?php print $final; //only if not "-" ?>  
-                <br>
+                    <?php if ($final == "-"){  continue; } ?>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="checkbox" class="check_good" value="" id="final_pubmed" name="pubmed_query[<?php print explode("<br>",$final)[0] ?>]">                
+                    <?php print $final; //only if not "-" ?>  
+                    <br>
 
-            <?php
-            }    
-            }
-
-            if ($t=="Protein recommended name"){
-                ?><section id="PRN"</section><?php                   
- 
-            // print specie header:
-            
-            if (!empty($array[$s][$t]) and (count($array[$s][$t])>1 or $array[$s][$t][0]!="-")){     
-                print "<br><h3>".$s."</h3><br>";
-            }
-            
-            foreach ($array[$s][$t] as $final){ ?>
-
-                <?php if ($final == "-"){  continue; } ?>
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                <input type="checkbox" class="check_good" value="" id="final_pubmed" name="pubmed_query[<?php print explode("<br>",$final)[0] ?>]">                
-                <?php print $final; //only if not "-" ?>  
-                <br>
-
-            <?php
-            }    
-            }
-
-            if ($t=="Gene synonyms"){
-                ?><section id="GS"</section><?php                    
- 
-            // print specie header:
-            
-            if (!empty($array[$s][$t]) and (count($array[$s][$t])>1 or $array[$s][$t][0]!="-")){     
-                print "<br><h3>".$s."</h3><br>";
-            }
-            
-            foreach ($array[$s][$t] as $final){ ?>
-
-                <?php if ($final == "-"){  continue; } ?>
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                <input type="checkbox" class="check_good" value="" id="final_pubmed" name="pubmed_query[<?php print explode("<br>",$final)[0] ?>]">                
-                <?php print $final; //only if not "-" ?>  
-                <br>
-
-            <?php
-            }    
-            }
-
-            if ($t=="Protein synonyms"){
-                ?><section id="PS"</section><?php                    
- 
-            // print specie header:
-            
-            if (!empty($array[$s][$t]) and (count($array[$s][$t])>1 or $array[$s][$t][0]!="-")){     
-                print "<br><h3>".$s."</h3><br>";
-            }
-            
-            foreach ($array[$s][$t] as $final){ ?>
-
-                <?php if ($final == "-"){  continue; } ?>
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                <input type="checkbox" class="check_good" value="" id="final_pubmed" name="pubmed_query[<?php print explode("<br>",$final)[0] ?>]">                
-                <?php print $final; //only if not "-" ?>  
-                <br>
-
-            <?php
-            }    
-            }
+                <?php
+                }    
+                ?><br><?php
+            }            
         }
     }
     ?>
     </div>
 <?php
 
-}?>
-                   
-    <button type="submit" class="btn btn-primary">Submit</button>
+}
+
+?>
+    <br>               
+    <button type="submit" class="btn btn-primary">Submit to PubMed</button>
     <button type="submit" formaction="my_json.php" class="btn btn-primary">Download json array</button>
-    
+<?php } ?>
 </form>    
+
 
 <script>
 var select_all = document.getElementById("select_all"); //select all checkbox
@@ -630,24 +604,11 @@ for (var i = 0; i < checkboxes.length; i++) {
     });
 }
 </script>    
+</div>
 
 
 <?php
 print "<br>";
 print footerDBW();   
     
-// Debug if you didn't find anything
-if ($something_printed===0){
-    print(" <h4> Your search gave no results <br><br></4>");?>
-
-<p><button class="btn btn-primary" onclick="window.location.href='index.php?new=1'">New Search</button></p>
-
-    <?php
-  
-}
-?>
-</div>
-</body>
-
-
 
