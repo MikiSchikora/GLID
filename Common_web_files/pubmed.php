@@ -14,21 +14,39 @@ print headerDBW("Home - GLID project");
 $_SESSION['queryData'] = $_REQUEST;
 
 if (isset($_FILES['json']['name'])){
-    $my_json = file_get_contents($_FILES['json']['tmp_name']);
+    $file_path = $_FILES['json']['tmp_name'];
+    
+    if ( 0 == filesize($file_path) ){
+        print "<br><br><h3>You have to provide a non-empty file</h3>";
+        exit(0);
+    }
+    
+    $my_json = file_get_contents($file_path);
+    
     $json_decoded = json_decode($my_json, true);
+    if (count($json_decoded)==0){
+        print "<br><br><h3>You have to provide a valid json file.</h3>";
+        exit(0);       
+    }
+    
     $_SESSION['queryPubmed'] = $json_decoded;
 }
 
 else{
+    
+    if (!isset($_SESSION['queryData']['pubmed_query'])){
+        print "<h3> You have to select something. <a href=\"./index.php\">Back to home</a> </h3>";
+        exit(0);
+    }
 
-$lc_array = array_keys($_REQUEST['pubmed_query']);
-$uc_array = array();
-foreach ($lc_array as $lc){
-    $uc_array[] = strtoupper($lc);
-}
-$final_query = array_unique($uc_array);
+    $lc_array = array_keys($_REQUEST['pubmed_query']);
+    $uc_array = array();
+    foreach ($lc_array as $lc){
+        $uc_array[] = strtoupper($lc);
+    }
+    $final_query = array_unique($uc_array);
 
-$_SESSION['queryPubmed'] = $final_query;
+    $_SESSION['queryPubmed'] = $final_query;
 }
 
 // Generate a string with the query names:
