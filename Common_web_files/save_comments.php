@@ -17,6 +17,7 @@ fclose($myfile);
 
 print headerDBW("Home - GLID project");
 
-print "<br><br><br><br><h3>Your suggestion has been processed, we'll email you back in three days as maximum.</h3>";
+print "<br><br><br><br><h3>Your suggestion has been processed, we'll email you back in three days as maximum.</h3><br><br>";
+print "<p>We save the comments of everybody in <a href=\"./Comments.tbl\" target=\"_blank\">this table</a> and process them carefully.</p>";
 
 print footerDBW();

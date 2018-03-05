@@ -1,4 +1,4 @@
-    <?php
+<?php
 // THIS CODE IS FOR SEARCHING ALL 
 // IT ALSO INCLUDES SOME TOOLS FOR AVOIDING PRINTING UNNECESSARY THINGS
 
@@ -12,12 +12,6 @@ include "select_species.inc.php";
 $_SESSION['queryData'] = $_REQUEST;
 
 ?>
-
-
-
-<div style="margin-left:15%">
-
-<div class="w3-container">
 
 <?php
 $array; // contains everything
@@ -345,6 +339,8 @@ if ($something_printed===0){
 ?>
 
 <!-- Sidebar -->
+
+<div class="w3-container">
 <div class="w3-sidebar w3-light-grey w3-bar-block" style="width:15%;margin-left:-70px">
     
   <?php if (isset($_SESSION['queryData']['RecName'])){ ?>             
@@ -367,6 +363,7 @@ if ($something_printed===0){
   <?php } ?>
     
 </div>
+<div style="margin-left:15%">
 
 <form name="MainForm" id="mainform-id" autocomplete="off" action="pubmed.php" method="POST" target="_blank" enctype="multipart/form-data" class="margin-top">
 
@@ -574,7 +571,24 @@ foreach ($items as $t) {?>
 ?>
     <br>               
     <button type="submit" class="btn btn-primary">Submit to PubMed</button>
-    <button type="submit" formaction="my_json.php" class="btn btn-primary">Download json array</button>
+    <button type="submit" formaction="my_json.php" class="btn btn-primary" id="json_submit">Download json array</button>
+    <div id="popup_json_submit" style="display: none">
+         <p><i>Click here to download your query. This is a text file containing a json array of all the names you have selected in this page. In HOME you can upload this file for a future search.</i></p>
+         <br>
+    
+    </div>
+    
+    <script>      
+    var e = document.getElementById('json_submit');
+    e.onmouseover = function() {
+        document.getElementById('popup_json_submit').style.display = 'block';
+    }
+    e.onmouseout = function() {
+        document.getElementById('popup_json_submit').style.display = 'none';
+    }
+    </script>   
+    <br><br><br><br>
+    
 <?php } ?>
 </form>    
 

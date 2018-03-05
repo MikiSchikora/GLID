@@ -17,7 +17,7 @@ print headerDBW("Home - GLID project");
 
 <div class="container">
 
-    <form name="MainForm" id="mainform-id" autocomplete="off" action="search_all_new_nav.php" method="POST" enctype="multipart/form-data" class="margin-top" target="_blank">
+    <form name="MainForm" id="mainform-id" autocomplete="off" action="search_all_new_nav.php" method="POST" enctype="multipart/form-data" class="margin-top">
 
     <div class="form-group">
     <label>Enter your query</label>
@@ -283,7 +283,7 @@ print headerDBW("Home - GLID project");
      </form>
  
     <form name="MainForm" id="mainform-id" autocomplete="off" action="pubmed.php" method="POST" enctype="multipart/form-data" class="margin-top" target="_blank">
-    <h2>Previous searches...</h2>
+    <h2>Upload your data from previous searches:</h2>
     <div class="form-group">
         Upload json file: <input type="file" id="json" name="json" value="" width="50" style="width:100%"/>
         <div id="popup_json" style="display: none">
