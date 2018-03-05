@@ -7,15 +7,24 @@
     <title>Help - GLID Project</title>
 
     <!-- Bootstrap styles -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link rel="stylesheet" href="custom.css">
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> -->
+    <!-- <link rel="stylesheet" href="custom.css"> -->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Optional theme -->
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"> -->
 
-    <!-- IE 8 Support-->
-    <!--[if lt IE 9]>
-      <script src=https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js></script>
-      <script src=https://oss.maxcdn.com/respond/1.4.2/respond.min.js></script>
-    <![endif]-->
-
+<style>
+  section {
+    border-style: solid;
+    border-top-color: cornflowerblue;
+    border-bottom-color: cornflowerblue;
+    border-left: none;
+    border-right: none;
+    text-align: center;
+}
+</style>
   </head>
   <body>
 
@@ -33,7 +42,19 @@
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
             <li><a href="index.php">Home</a></li>
-            <li class="active"><a href="help.html">Help</a></li>
+
+            <li class="dropdown">
+              <a href="help.html" class="dropdown-toggle" data-toggle="dropdown">Help<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                  <li><a href="#description">GLID description</a></li>
+                  <li><a href="#query">Query GLIDdb</a></li>
+                  <li><a href="#search">Search options</a></li>
+                  <li><a href="#tax">Specie/Taxonomy filter</a></li>
+                  <li><a href="#pubmed">Query to PubMed</a></li>
+                  <li><a href="#json">Download/Upload your results</a></li>
+          </ul>
+            </li>
+
             <li><a href="contact.html">Contact</a></li>
           </ul>
         </div><!--/.nav-collapse -->
@@ -41,47 +62,94 @@
     </nav>
 
     <div class="container">
-
-      <h1>Help</h1>
+      <br><br><br>
+      <section><h3 id="description"><b>GLID description</b></h3></section><br>
 
       <p>GLID is the best idea ever blablabla</p>
 
-      <h2>How to query GLID database</h2>
+      <section><h3 id="query"><b>How to query GLIDdb</b></h3></section><br>
+      
+      <h4><i class="fa fa-search" aria-hidden="true" style="font-size:18px"></i>&nbsp;&nbsp;Enter your query</h4>
+      <p>Different <b>types of query</b> are supported by GLID. In the query form, the following <b>terms</b> can be introduced:
+        <ul style="list-style-type:circle">
+          <li>a gene name (short or long term)</li>
+          <li>a protein name (short or long term)</li>
+          <li>an EntrezGene ID or a UniProt ID</li>
+        </ul>
+        <i class="fa fa-exclamation-circle" aria-hidden="true" style="font-size:14px"></i>&nbsp;The search is <u>case-insensitive</u>, meaning that upper and lower case will be ignored and treated as equal.<br><br>
+        Here there are some <b>examples</b> of usage: CDK2, cdk2, Cyclin-dependent kinase 2, 1017, P24041.</p><br>
+    
+      <section><h3 id="search"><b>Search options</b></h3></section><br>
 
-      <h3>Enter a name</h3>
-      <p>Different types of query are supported by GLID. You can enter a gene name (short or long), a protein name (short or long), an EntrezGene ID or a UniProt ID in the query form. The search is case-insensitive, meaning that upper and lower case will be ignored and treated as equal. Here there are some examples of usage: CDK2, cdk2, Cyclin-dependent kinase 2, 1017, P24041.</p><br>
+      <h4><i class="fa fa-check-square-o" aria-hidden="true" style="font-size:16px"></i>&nbsp;&nbsp;Look for the <b>recommended gene/protein name</b></h4>
+      <p>Enter your query gene/protein name or ID, and obtain the recommended gene/protein name, if there is one. The list of recommended names are retrieved from the UniProt consortium and HGNC (HUGO Gene Nomenclature Commitee).</p>
+      <p><i class="fa fa-asterisk" aria-hidden="true" style="font-size:8px"></i> From that list, you can select as many as you wish and then proceed to download a JSON file with them and/or query PubMed to maximise your literature search results.</p><br>
 
-      <h3>Choose what to search</h3>
-      <p>GLID can perform different types of search depending on your interests.</p><br>
+      <h4><i class="fa fa-check-square-o" aria-hidden="true" style="font-size:16px"></i>&nbsp;&nbsp;Find all the <b>synonyms</b> of your gene/protein</h4>
+      <p>Enter your query gene/protein name or ID, and obtain a list of all the gene/protein synonyms. The list of all synonyms is retrieved from the UniProt consortium. </p>
+      <p><i class="fa fa-asterisk" aria-hidden="true" style="font-size:8px"></i> From that list, you can select as many as you wish and then proceed to download a JSON file with them and/or query PubMed to maximise your literature search results.</p><br>
 
-      <h4>Look for the recommended name of a gene/protein</h4>
-      <p>Just enter your query, click the option Recommended gene name and select the species. You will obtain the recommended name, if there is one. Recommended names are retrieved from the UniProt consortium and HGNC (HUGO Gene Nomenclature Commitee).</p><br>
+      <h4><i class="fa fa-check-square-o" aria-hidden="true" style="font-size:16px"></i>&nbsp;&nbsp;Find <b>phylogenetically related genes</b> from OrthoDB</h4>
+      <p>Enter your query gene/protein name or ID and a specie to retrieve a list of all phylogenetically related genes annotated inside an OrthoDB group. As a consequence of selecting a reduced number of species for this pilot version, only approximately a 10% of the genes are showing philogenetically related genes.</p>
+      <p><i class="fa fa-asterisk" aria-hidden="true" style="font-size:8px"></i> From that list, you can select as many as you wish and then proceed to download a JSON file with them and/or query PubMed to maximise your literature search results.</p><br>
 
-      <h4>Find all the synonyms of your gene/protein</h4>
-      <p>Enter a query gene/protein name or ID and obtain a list of all the synonyms. From that list, you can select as many as you wish and then proceed to download a JSON file with them and/or query PubMed to maximise your literature search results. The list of all synonyms is retrieved from the UniProt consortium.</p><br>
+      <h4><i class="fa fa-check-square-o" aria-hidden="true" style="font-size:16px"></i>&nbsp;&nbsp;Find <b>similar proteins</b> according to PFAM domains</h4>
+      <p>Enter your query gene/protein name or ID, and retrieve a list of all the described proteins which have the exact same PFAM domains. </p>
+      <p><i class="fa fa-asterisk" aria-hidden="true" style="font-size:8px"></i> From that list, you can select as many as you wish and then proceed to download a JSON file with them and/or query PubMed to maximise your literature search results.</p><br>
 
-      <h4>Find phylogenetically related genes from OrthoDB</h4>
-      <p>Enter a query gene/protein name and a species to retrieve a list of all phylogenetically related genes annotated inside an OrthoDB group. From that list, you can select as many as you wish and then proceed to download a file with them and/or query PubMed to maximise your literature search results.</p><br>
+      <h4><i class="fa fa-check-square-o" aria-hidden="true" style="font-size:16px"></i>&nbsp;&nbsp;Find proteins with <b>similar function</b> according Gene Ontology (GO)</h4>
+      <p>Enter your query gene/protein name or ID, and retrieve a list of all the described proteins which, for all the different types of Gene Ontology terms, have at least a 80% of intersection with the query.</p>
+      <p><i class="fa fa-asterisk" aria-hidden="true" style="font-size:8px"></i> From that list, you can select as many as you wish and then proceed to download a JSON file with them and/or query PubMed to maximise your literature search results.</p><br>
 
-      <h4>Find similar proteins according to PFAM domains</h4>
-      <p>Enter a query gene/protein name or ID and retrieve a list of all the described proteins which have the exact same PFAM domains. From that list, you can select as many as you wish and then proceed to download a file with them and/or query PubMed to maximise your literature search results.</p><br>
 
-      <h4>Find proteins with similar function according Gene Ontology</h4>
-      <p>Enter a query gene/protein name or ID and retrieve a list of all the described proteins which, for all the different types of Gene Ontology terms, have at least a 80% of intersection with the query. From that list, you can select as many as you wish and then proceed to download a file with them and/or query PubMed to maximise your literature search results.</p><br>
+      <section><h3 id="tax"><b>Restrict to one specie name or taxonomy group</b></h3></section><br>
+      <p>GLID allows to select either a <b>single specie</b> or a <b>taxonomic group</b> from two predefined sets: the specie names list and the taxonomic groups list. Regarding the specie names list, 14 species were choosen for this pilot web application. Regarding the taxonomic groups list, the taxonomic hierarchical classification division defined by the NCBI was used.<br><br>
+      <i class="fa fa-exclamation-circle" aria-hidden="true" style="font-size:14px"></i>&nbsp;In the corresponding forms, start <u>typing</u> to see if your specie or taxonomic group of interest is supported.</p><br>
+      <p>Here we provide the two <b>complete lists</b>:<br></p>
+      <p><b>Species</b> 
+        <ul>
+            <li><i>Mus musculus</i></li>
+            <li><i>Saccharomyces cerevisiae</i></li>
+            <li><i>Schizosaccharomyces pombe</i></li>
+            <li><i>Pan troglodytes</i></li>
+            <li><i>Bacillus subtilis</i></li>
+            <li><i>Gallus gallus</i></li>
+            <li><i>Xenopus laevis</i></li>
+            <li><i>Nicotiana tabacum</i></li>
+            <li><i>Escherichia coli</i></li>
+            <li><i>Caenorhabditis elegans</i></li>
+            <li><i>Drosophila melanogaster</i></li>
+            <li><i>Danio rerio</i></li>
+            <li><i>Bos taurus</i></li>
+            <li><i>Homo sapiens</i></li>
+          </ul>
+          
+      <p><b>Taxonomic groups</b>
+        <ul>
+            <li><i>Bacteria</i></li>
+            <li><i>Invertebrates</i></li>
+            <li><i>Mammals</i></li>
+            <li><i>Plants and Fungi</i></li>
+            <li><i>Primates</i></li>
+            <li><i>Rodents</i></li>
+            <li><i>Rodents</i></li>
+        </ul>
+    <br>
+    <section><h3 id="pubmed"><b>Query to PubMed</b></h3></section><br>
+    <p>Once your results have been reported considering your previously selected search options, you can choose <b>as many as</b> these <b>gene/protein names</b> (short and long terms) to be submitted on <b>PubMed</b>. Additionally, before submitting them, you can add some extra <b>keywords</b> if necessary. </p><br>
 
-      <h3>Restrict to one/many species name or taxonomy</h3>
-      <p>GLID allows to select a single specie from a list or either a taxonomic group. Start typing to see if your specie or taxonomic group of interest is supported.</p>
-      <p>Here we provide the complete list:<br></p>
-      <p><b>Species:</b> Mus musculus, Saccharomyces cerevisiae, Schizosaccharomyces pombe, Pan troglodytes, Bacillus subtilis, Gallus gallus, Xenopus laevis, Nicotiana tabacum, Escherichia coli, Caenorhabditis elegans, Drosophila melanogaster, Danio rerio, Homo sapiens, Bos taurus.<br></p>
-      <p><b>Taxonomic groups:</b> Bacteria, Invertebrates, Mammals, Plants and Fungi, Primates, Rodents, Vertebrates.</p><br>
-
-       
+    <section><h3 id="json"><b>Download/Upload your results</b></h3></section><br>
+    <p><b>JSON file download</b><br>
+      Once your results have been reported considering your previously selected search options, you can select as many as you wish and then proceed to download a JSON file.<br><br>
+      <b>JSON file upload</b><br>
+      At the home page, if you have <u>previously</u> performed a search and download its associated JSON array file, you can upload this file to directly submit its content to PubMed.
+    </p>
     </div><!-- /.container -->
 
-
+<br><br>
 
     <div class="container">
-  <h2>Help Table</h2>
+  <h3> <i class="fa fa-info-circle" aria-hidden="true" style="font-size:24px"></i> Help Table</h3>
   <p>Information about different concepts, webpages and databases used to build GLID.</p>            
   <table class=table table-bordered>
     <thead>
@@ -93,19 +161,29 @@
     </thead>
     <tbody>
       <tr>
-        <td>Names & Taxonomy from UniProt</td>
+        <td><b>Names & Taxonomy</b> from <b>Uniprot</b></td>
         <td>Information on how Uniprot classifies Recommended and Alternative names</td>
-        <td><a href="https://www.uniprot.org/help/names_and_taxonomy_section">Go to UniProt</a></td>
+        <td><a href="https://www.uniprot.org/help/names_and_taxonomy_section" target="blank">Go to UniProt</a></td>
       </tr>
       <tr>
-        <td>OrthoDB help page</td>
+        <td><b>OrthoDB</b> help page</td>
         <td>Information about OrthoDB parameters</td>
-        <td><a href="http://www.orthodb.org/?page=help">Go to OrthoDB help page</a></td>
+        <td><a href="http://www.orthodb.org/?page=help" target="blank">Go to OrthoDB help page</a></td>
       </tr>
       <tr>
-        <td>PubMed search help</td>
+          <td><b>Pfam</b> help page</td>
+          <td>Information about Pfam database</td>
+          <td><a href="https://pfam.xfam.org/help" target="blank">Go to Pfam help page</a></td>
+        </tr>
+        <tr>
+            <td><b>GO</b> documentation page</td>
+            <td>Information about Gene Ontology (GO) Consortium</td>
+            <td><a href="http://www.geneontology.org/page/introduction-go-resource" target="blank">Go to GO documentation page</a></td>
+          </tr>
+      <tr>
+        <td><b>PubMed</b> search help</td>
         <td>Information on how to search PubMed</td>
-        <td><a href="https://www.ncbi.nlm.nih.gov/books/NBK3827/#_pubmedhelp_PubMed_Quick_Start_">Go to PubMed Search tutorial</a></td>
+        <td><a href="https://www.ncbi.nlm.nih.gov/books/NBK3827/#_pubmedhelp_PubMed_Quick_Start_" target="blank">Go to PubMed Search tutorial</a></td>
       </tr>
     </tbody>
   </table>
@@ -113,12 +191,16 @@
 <br>
 <br>
 
+<!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="../../dist/js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
 
-
-    <!-- jQuery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <!-- Bootstrap JS -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
   </body>
 </html>
