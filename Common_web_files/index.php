@@ -17,7 +17,7 @@ print headerDBW("Home - GLID project");
 
 <div class="container">
 
-    <form name="MainForm" id="mainform-id" autocomplete="off" action="search_all_new.php" method="POST" enctype="multipart/form-data" class="margin-top">
+    <form name="MainForm" id="mainform-id" autocomplete="off" action="search_all_new_nav.php" method="POST" enctype="multipart/form-data" class="margin-top">
 
     <div class="form-group">
     <label>Enter your query</label>
@@ -278,11 +278,23 @@ print headerDBW("Home - GLID project");
 <form name="MainForm" id="mainform-id" autocomplete="off" action="pubmed.php" method="POST" enctype="multipart/form-data" class="margin-top">
     <h2>Previous searches...</h2>
     <div class="form-group">
-        Upload json file: <input type="file" name="json" value="" width="50" style="width:100%"/>
+        Upload json file: <input type="file" id="json" name="json" value="" width="50" style="width:100%"/>
+        <div id="popup_json" style="display: none">
+            <p><i>If you already used this website before you may have a json file containing the content of previous search. If so, you can upload it here.</i></p>
+        </div>
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 
+    <script>      
+    var e = document.getElementById('json');
+    e.onmouseover = function() {
+        document.getElementById('popup_json').style.display = 'block';
+    }
+    e.onmouseout = function() {
+        document.getElementById('popup_json').style.display = 'none';
+    }
+    </script>  
 
 </div><!-- /.container -->
 

@@ -45,75 +45,19 @@
       <h1>Enter your details</h1>
       <h5>If you wish to contact the administrators of the page and GLID project, leave your contact details here.</h5>
 
-      <form id="form-id" action="" method="" class="margin-top">
+      <form id="form-id" action="save_comments.php" method="GET" class="margin-top">
 
         <!--div class="row"-->
             <div class="form-group">
-              <label for="exampleInputEmail1">Email address</label>
-              <input type="email" class="form-control" id="exampleInputEmail" name="exampleInputEmail" aria-describedby="emailHelp" placeholder="Enter email" required="true">
+              <label for="InputEmail">Email address</label>
+              <input type="email" class="form-control" id="exampleInputEmail" name="InputEmail" aria-describedby="emailHelp" placeholder="Enter email" required="true">
               <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
             </div>
-        <!--/div-->
-        <!--div class="row">
-          <div class="col-md-6">
-            <div class="form-group">
-              <label for="exampleInputText">Enter a text</label>
-              <input type="text" class="form-control" id="exampleInputText" name="exampleInputText" placeholder="Enter a text here">
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="form-group">
-              <label for="exampleInputNumber">Enter a number</label>
-              <input type="number" class="form-control" id="exampleInputNumber" name="exampleInputNumber" placeholder="Enter a number here">
-            </div>
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="exampleSelect1">Example select</label>
-          <select class="form-control" id="exampleSelect1" name="exampleSelect1">
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
-          </select>
-        </div-->
         <div class="form-group">
           <label for="exampleTextarea">Comments, suggestions...</label>
           <textarea class="form-control" id="suggestions" name="suggestions" rows="4"></textarea>
         </div>
-        <!--div class="form-group">
-          <label for="exampleInputFile">File input</label>
-          <input type="file" class="form-control-file" id="exampleInputFile" name="exampleInputFile" aria-describedby="fileHelp">
-          <small id="fileHelp" class="form-text text-muted">This is some placeholder block-level help text for the above input. It's a bit lighter and easily wraps to a new line.</small>
-        </div>
-        <fieldset class="form-group">
-          <legend>Radio buttons</legend>
-          <div class="form-check">
-            <label class="form-check-label">
-              <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios1" value="option1" checked>
-              Option one is this and that&mdash;be sure to include why it's great
-            </label>
-          </div>
-          <div class="form-check">
-          <label class="form-check-label">
-              <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios2" value="option2">
-              Option two can be something else and selecting it will deselect option one
-            </label>
-          </div>
-          <div class="form-check disabled">
-          <label class="form-check-label">
-              <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios3" value="option3" disabled>
-              Option three is disabled
-            </label>
-          </div>
-        </fieldset>
-        <div class="form-check">
-          <label class="form-check-label">
-            <input type="checkbox" class="form-check-input" id="exampleCheckbox" name="exampleCheckbox">
-            Check me out
-          </label>
-        </div-->
+
         <button type="submit" class="btn btn-primary">Submit</button>
       </form>
 

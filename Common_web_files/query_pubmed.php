@@ -80,7 +80,7 @@ print headerDBW("PUBMED RESULTS");
 ?>
 
 <br>
-<h4> These are the first 100 papers that match your search in PUBMED...</h4>
+<h4> These are the first 100 papers that match your search in PUBMED:</h4>
 <br>
 
 <div class="container-fluid">
@@ -123,7 +123,7 @@ print $t_body;
 <br><br>
 <h4> You can also 
     <?php echo '<a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=', urlencode($query), '" target=\"_blank\">Query Pubmed</a> ' ?>
-directly...</h4>
+directly.</h4>
 
 <br><br>
 
