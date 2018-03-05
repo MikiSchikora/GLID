@@ -17,13 +17,20 @@ print headerDBW("Home - GLID project");
 
 <div class="container">
 
-    <form name="MainForm" id="mainform-id" autocomplete="off" action="search_all_new_nav.php" method="POST" enctype="multipart/form-data" class="margin-top">
+    <form name="MainForm" id="mainform-id" autocomplete="off" action="search_all_new_nav.php" method="POST" enctype="multipart/form-data" class="margin-top" target="_blank">
 
     <div class="form-group">
     <label>Enter your query</label>
     <input type="text" class="form-control" id="query" name="myQuery" value="" required placeholder="Write here a gene/protein name, UniProt ID or ENTREZGENE ID (CDK2, cyclin dependent kinase 2, CDK2_HUMAN, 8246 ...)" > <!-- value="<?php //print $_SESSION['queryData']['query'] ?>" -->
     </div>
-
+        
+     <h5>These are some examples you could try:</h5>
+    <span><input type="button" value="A1BG" onClick="document.getElementById('query').value='A1BG'"></span>
+    <span><input type="button" value="Alpha-1B-glycoprotein" onClick="document.getElementById('query').value='Alpha-1B-glycoprotein'"></span>
+    <span><input type="button" value="CDK4" onClick="document.getElementById('query').value='CDK4'"></span>
+    <span><input type="button" value="Cyclin-dependent kinase 4" onClick="document.getElementById('query').value='Cyclin-dependent kinase 4'"></span>   
+    
+    
     <h2>Looking for one specie or taxonomic group?</h2>
 
     <script type="text/javascript">
@@ -275,7 +282,7 @@ print headerDBW("Home - GLID project");
     <button class="btn btn-primary" onclick="window.location.href='index.php?new=1'">New Search</button>
      </form>
  
-<form name="MainForm" id="mainform-id" autocomplete="off" action="pubmed.php" method="POST" enctype="multipart/form-data" class="margin-top">
+    <form name="MainForm" id="mainform-id" autocomplete="off" action="pubmed.php" method="POST" enctype="multipart/form-data" class="margin-top" target="_blank">
     <h2>Previous searches...</h2>
     <div class="form-group">
         Upload json file: <input type="file" id="json" name="json" value="" width="50" style="width:100%"/>
