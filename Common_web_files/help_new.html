@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Help - GLID Project</title>
+
+    <!-- Bootstrap styles -->
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> -->
+    <!-- <link rel="stylesheet" href="custom.css"> -->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"> -->
+
+
+  </head>
+  <body>
+
+    <nav class="navbar navbar-inverse">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="index.php">GLID project</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="index.php">Home</a></li>
+
+            <li class="dropdown">
+              <a href="help.html" class="dropdown-toggle" data-toggle="dropdown">Help<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                  <li><a href="#query">Types of queries</a></li>
+                  <li><a href="#search">Search options</a></li>
+          </ul>
+            </li>
+
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div class="container">
+
+      <h1>Help</h1>
+
+      <p>GLID is the best idea ever blablabla</p>
+
+      <h2>How to query GLID database</h2>
+
+      <h3 id="query">Enter a name</h3>
+      <p>Different types of query are supported by GLID. You can enter a gene name (short or long), a protein name (short or long), an EntrezGene ID or a UniProt ID in the query form. The search is case-insensitive, meaning that upper and lower case will be ignored and treated as equal. Here there are some examples of usage: CDK2, cdk2, Cyclin-dependent kinase 2, 1017, P24041.</p><br>
+
+      <h3 id="search">Choose what to search</h3>
+      <p>GLID can perform different types of search depending on your interests.</p><br>
+
+      <h4>Look for the recommended name of a gene/protein</h4>
+      <p>Just enter your query, click the option Recommended gene name and select the species. You will obtain the recommended name, if there is one. Recommended names are retrieved from the UniProt consortium and HGNC (HUGO Gene Nomenclature Commitee).</p><br>
+
+      <h4>Find all the synonyms of your gene/protein</h4>
+      <p>Enter a query gene/protein name or ID and obtain a list of all the synonyms. From that list, you can select as many as you wish and then proceed to download a JSON file with them and/or query PubMed to maximise your literature search results. The list of all synonyms is retrieved from the UniProt consortium.</p><br>
+
+      <h4>Find phylogenetically related genes from OrthoDB</h4>
+      <p>Enter a query gene/protein name and a species to retrieve a list of all phylogenetically related genes annotated inside an OrthoDB group. From that list, you can select as many as you wish and then proceed to download a file with them and/or query PubMed to maximise your literature search results.</p><br>
+
+      <h4>Find similar proteins according to PFAM domains</h4>
+      <p>Enter a query gene/protein name or ID and retrieve a list of all the described proteins which have the exact same PFAM domains. From that list, you can select as many as you wish and then proceed to download a file with them and/or query PubMed to maximise your literature search results.</p><br>
+
+      <h4>Find proteins with similar function according Gene Ontology</h4>
+      <p>Enter a query gene/protein name or ID and retrieve a list of all the described proteins which, for all the different types of Gene Ontology terms, have at least a 80% of intersection with the query. From that list, you can select as many as you wish and then proceed to download a file with them and/or query PubMed to maximise your literature search results.</p><br>
+
+      <h3>Restrict to one/many species name or taxonomy</h3>
+      <p>GLID allows to select a single specie from a list or either a taxonomic group. Start typing to see if your specie or taxonomic group of interest is supported.</p>
+      <p>Here we provide the complete list:<br></p>
+      <p><b>Species:</b> Mus musculus, Saccharomyces cerevisiae, Schizosaccharomyces pombe, Pan troglodytes, Bacillus subtilis, Gallus gallus, Xenopus laevis, Nicotiana tabacum, Escherichia coli, Caenorhabditis elegans, Drosophila melanogaster, Danio rerio, Homo sapiens, Bos taurus.<br></p>
+      <p><b>Taxonomic groups:</b> Bacteria, Invertebrates, Mammals, Plants and Fungi, Primates, Rodents, Vertebrates.</p><br>
+
+       
+    </div><!-- /.container -->
+
+
+
+    <div class="container">
+  <h2>Help Table</h2>
+  <p>Information about different concepts, webpages and databases used to build GLID.</p>            
+  <table class=table table-bordered>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Link</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Names & Taxonomy from UniProt</td>
+        <td>Information on how Uniprot classifies Recommended and Alternative names</td>
+        <td><a href="https://www.uniprot.org/help/names_and_taxonomy_section">Go to UniProt</a></td>
+      </tr>
+      <tr>
+        <td>OrthoDB help page</td>
+        <td>Information about OrthoDB parameters</td>
+        <td><a href="http://www.orthodb.org/?page=help">Go to OrthoDB help page</a></td>
+      </tr>
+      <tr>
+        <td>PubMed search help</td>
+        <td>Information on how to search PubMed</td>
+        <td><a href="https://www.ncbi.nlm.nih.gov/books/NBK3827/#_pubmedhelp_PubMed_Quick_Start_">Go to PubMed Search tutorial</a></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<br>
+<br>
+
+<!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="../../dist/js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+  </body>
+</html>
