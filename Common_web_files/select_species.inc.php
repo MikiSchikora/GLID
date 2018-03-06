@@ -66,4 +66,12 @@ foreach ($Species as $s){
 $Species = $Final_species;
 
 // Define the type of query (may be more than one):    
-$query = implode("\\",str_split($_REQUEST['myQuery'])); // this is for clarity
+$query = $_REQUEST['myQuery'];
+
+// Debug query
+
+if (strpos($query,"'") !== false) {
+    print "<h3> Your query can't have a '. <a href=\"./index.php\">Back to home</a> </h3>";
+    print footerDBW();
+    exit(0);
+}

@@ -64,8 +64,8 @@ print headerDBW("Home - GLID project");
         <label for="exampleInputText">Enter name of taxonomic group</label>
         <input id="inputtaxonomy" type="text" name="myTaxonomy" placeholder="Taxonomic group">
     </div>
-    
-    <p> <b>We recommend to fill one of these fields. In case they are empty</b></p>
+    <br>
+    <p> <b>We recommend to fill one of these fields. In case they are empty you'll be querying for all the species in the database.</b></p>
 
     <script>
     function autocomplete(inp, arr) {

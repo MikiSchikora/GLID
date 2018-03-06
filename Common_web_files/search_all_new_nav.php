@@ -42,8 +42,6 @@ foreach ($Species as $Specie){
     $Pfam=array();
     $Pfam['ID'] = array(); $Pfam['similar_proteins'] = array();
     
-    print "$ProteinID<br>";
-
     $GO_terms= array(); // an array cointaining the GO decription and type of this gene. 
     $GO_terms['C'] = array(); $GO_terms['F'] = array(); $GO_terms['P'] = array(); 
     $GO_similar_genes= array(); // an array cointaining arrays of genes with similar function
@@ -69,7 +67,7 @@ foreach ($Species as $Specie){
     elseif (isset($_SESSION['queryData']['RecName']) or isset($_SESSION['queryData']['Synonyms']) or isset($_SESSION['queryData']['Orthologues']) or isset($_SESSION['queryData']['Pfam']) or isset($_SESSION['queryData']['GO'])){
          $something_printed = 1;        
     }
-     
+      
     // save things of the initial search 
     $i=0;
     while ($rsF = mysqli_fetch_array($rs)) {
@@ -79,16 +77,14 @@ foreach ($Species as $Specie){
             $GeneID[] = $rsF['id_ENTREZGENE'];      
             $ProteinID[] = $rsF['id_Uniprot']; 
             $i++;
-        }
-        
+        }       
         $GeneSynonyms[] = $rsF['name_genesynonym'];
-        $ProteinSynonyms[] = $rsF['name_proteinsynonym'];
-        
-    }     
+        $ProteinSynonyms[] = $rsF['name_proteinsynonym'];        
+    }   
+
     $GeneSynonyms=  array_unique($GeneSynonyms);
     $ProteinSynonyms=  array_unique($ProteinSynonyms);
-    
-    
+
     // add things to $info and $items if selected
       
     //RECCOMENDED NAMES:  
