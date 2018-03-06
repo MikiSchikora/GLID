@@ -39,19 +39,6 @@ print headerDBW("Home - GLID project");
 
     </script>
 
-     <!-- This jQuery script allows to submit the form by fillin one out of Species or Taxonomy  -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <script>
-    jQuery(function ($) {
-        var $inputs = $('input[name=mySpecie],input[name=myTaxonomy]');
-        $inputs.on('input', function () {
-            // Set the required property of the other input to false if this input is not empty.
-            $inputs.not(this).prop('required', !$(this).val().length);
-        });
-    });
-
-    </script>
-
 <!--Make sure the form has the autocomplete function switched off:-->
 
     <div class="autocomplete" style="width:300px;">
@@ -65,7 +52,7 @@ print headerDBW("Home - GLID project");
         <input id="inputtaxonomy" type="text" name="myTaxonomy" placeholder="Taxonomic group">
     </div>
     <br>
-    <p> <b>We recommend to fill one of these fields. In case they are empty you'll be querying for all the species in the database.</b></p>
+    <p> <i>We recommend to <b>fill one of these fields</b>. In case they are empty you'll be querying for all the species in the database.</i></p>
 
     <script>
     function autocomplete(inp, arr) {
@@ -283,8 +270,24 @@ print headerDBW("Home - GLID project");
     </script>    
                 
     <p></p>
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="submit" class="btn btn-primary" id ="submit_to_Pubmed">Submit</button>
+    
     <button class="btn btn-primary" onclick="window.location.href='index.php?new=1'">New Search</button>
+    
+    <div id="popup_submit_to_Pubmed" style="display: none">
+         <p><i>BE PATIENT AFTER CLICKING THIS!! We need to process your query. </i></p>
+    </div> 
+    
+    <script>      
+    var e = document.getElementById('submit_to_Pubmed');
+    e.onmouseover = function() {
+        document.getElementById('popup_submit_to_Pubmed').style.display = 'block';
+    }
+    e.onmouseout = function() {
+        document.getElementById('popup_submit_to_Pubmed').style.display = 'none';
+    }
+    </script> 
+    
      </form>
  
     <form name="MainForm" id="mainform-id" autocomplete="off" action="pubmed.php" method="POST" enctype="multipart/form-data" class="margin-top" target="_blank">
