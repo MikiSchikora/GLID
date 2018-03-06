@@ -63,23 +63,31 @@
 
     <div class="container">
       <br><br><br>
-      <section><h3 id="description"><b>GLID description</b></h3></section><br>
+      <section><h2 id="description">GLID description</h2></section><br>
 
-      <p>GLID is the best idea ever blablabla</p>
+      <p>Imagine you are <b>interested in a gene</b> or protein. <b>People call genes and proteins in different ways</b>, which is a nightmare for anyone
+          who is interested in studying its function, evolution or clinical implications. In addition, phylogenetically related genes (potentially interesting
+          if you want to study the function or evolution of the gene across organisms) do not always share nomenclature. 
+          <br><br>
+          At the end you may query PubMed in a partial way, missing information you would like to have.  <b>GLID aims to solve this nightmare</b>.
+          <br><br>
+          We have mined nomenclature data of many databases (HGNC, UniProt, NCBI, OrthoDB and others) and built an integrative database with this.
+      
+      </p>
 
-      <section><h3 id="query"><b>How to query GLIDdb</b></h3></section><br>
+      <section><h2 id="query">How to query GLIDdb</h2></section><br>
       
       <h4><i class="fa fa-search" aria-hidden="true" style="font-size:18px"></i>&nbsp;&nbsp;Enter your query</h4>
       <p>Different <b>types of query</b> are supported by GLID. In the query form, the following <b>terms</b> can be introduced:
         <ul style="list-style-type:circle">
-          <li>a gene name (short or long term)</li>
-          <li>a protein name (short or long term)</li>
+          <li>a gene name (short or long, ether being the reccomended or an alternative name)</li>
+          <li>a protein name (short or long or an alternative name)</li>
           <li>an EntrezGene ID or a UniProt ID</li>
         </ul>
         <i class="fa fa-exclamation-circle" aria-hidden="true" style="font-size:14px"></i>&nbsp;The search is <u>case-insensitive</u>, meaning that upper and lower case will be ignored and treated as equal.<br><br>
         Here there are some <b>examples</b> of usage: CDK2, cdk2, Cyclin-dependent kinase 2, 1017, P24041.</p><br>
     
-      <section><h3 id="search"><b>Search options</b></h3></section><br>
+      <section><h2 id="search">Search options</h2></section><br>
 
       <h4><i class="fa fa-check-square-o" aria-hidden="true" style="font-size:16px"></i>&nbsp;&nbsp;Look for the <b>recommended gene/protein name</b></h4>
       <p>Enter your query gene/protein name or ID, and obtain the recommended gene/protein name, if there is one. The list of recommended names are retrieved from the UniProt consortium and HGNC (HUGO Gene Nomenclature Commitee).</p>
@@ -102,7 +110,7 @@
       <p><i class="fa fa-asterisk" aria-hidden="true" style="font-size:8px"></i> From that list, you can select as many as you wish and then proceed to download a JSON file with them and/or query PubMed to maximise your literature search results.</p><br>
 
 
-      <section><h3 id="tax"><b>Restrict to one specie name or taxonomy group</b></h3></section><br>
+      <section><h2 id="tax">Restrict to one specie name or taxonomy group</h2></section><br>
       <p>GLID allows to select either a <b>single specie</b> or a <b>taxonomic group</b> from two predefined sets: the specie names list and the taxonomic groups list. Regarding the specie names list, 14 species were choosen for this pilot web application. Regarding the taxonomic groups list, the taxonomic hierarchical classification division defined by the NCBI was used.<br><br>
       <i class="fa fa-exclamation-circle" aria-hidden="true" style="font-size:14px"></i>&nbsp;In the corresponding forms, start <u>typing</u> to see if your specie or taxonomic group of interest is supported.</p><br>
       <p>Here we provide the two <b>complete lists</b>:<br></p>
@@ -135,10 +143,10 @@
             <li><i>Rodents</i></li>
         </ul>
     <br>
-    <section><h3 id="pubmed"><b>Query to PubMed</b></h3></section><br>
+    <section><h2 id="pubmed">Query to PubMed</h2></section><br>
     <p>Once your results have been reported considering your previously selected search options, you can choose <b>as many as</b> these <b>gene/protein names</b> (short and long terms) to be submitted on <b>PubMed</b>. Additionally, before submitting them, you can add some extra <b>keywords</b> if necessary. </p><br>
 
-    <section><h3 id="json"><b>Download/Upload your results</b></h3></section><br>
+    <section><h2 id="json">Download/Upload your results</h2></section><br>
     <p><b>JSON file download</b><br>
       Once your results have been reported considering your previously selected search options, you can select as many as you wish and then proceed to download a JSON file.<br><br>
       <b>JSON file upload</b><br>
