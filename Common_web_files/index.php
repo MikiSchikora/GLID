@@ -17,7 +17,7 @@ print headerDBW("Home - GLID project");
 
 <div class="container">
 
-    <form name="MainForm" id="mainform-id" autocomplete="off" action="search_all_new_nav.php" method="POST" enctype="multipart/form-data" class="margin-top">
+    <form name="MainForm" id="mainform-id" autocomplete="off" action="search.php" method="POST" enctype="multipart/form-data" class="margin-top">
 
     <div class="form-group">
     <label>Enter your query</label>
