@@ -63,7 +63,7 @@
 
     <div class="container">
       <br><br><br>
-      <section><h2 id="description">GLID description</h2></section><br>
+      <section><h2 id="description">Gene to Literature Integrative Database (GLID)</h2></section><br>
 
       <p>Imagine you are <b>interested in a gene</b> or protein. <b>People call genes and proteins in different ways</b>, which is a nightmare for anyone
           who is interested in studying its function, evolution or clinical implications. In addition, phylogenetically related genes (potentially interesting
@@ -71,7 +71,27 @@
           <br><br>
           At the end you may query PubMed in a partial way, missing information you would like to have.  <b>GLID aims to solve this nightmare</b>.
           <br><br>
-          We have mined nomenclature data of many databases (HGNC, UniProt, NCBI, OrthoDB and others) and built an integrative database with this.
+          We have mined nomenclature data of many sources (HGNC, UniProt, NCBI, OrthoDB and others, using <a href="./Code.zip">this code</a>) and built an integrative database with this information. 
+          We have provided a user-friendly interface to navigate across dfferent gene/protein names, select them and query pubmed. The database offers the possibility to 
+          add keywords to the search and displaying the literature matching your patterns.
+          <br><br>
+          Futhermore, we have reasoned that anyone interested in a gene/protein may also be interested in those <b>genes with a similar function</b> (for example
+          in the same species). We have provided two sections (similar proteins and similar function) that provide an approach to this information. 
+          <br><br>
+         
+          <ul style="list-style-type:circle">
+            <li>On the one hand, two proteins that share the exact same domains are likely to have the same function, and the section "similar proteins" provides this information from the Pfam database. </li>
+            <br>
+            <li> On the other hand, two genes that share a given number of Gene Ontology (GO) terms are also likely to have similar function . We have provided these relationships
+                for each of the functional terms (Molecular Function, Biological Process and Cellular Component) in the "similar function" section. Note that this approach
+                is limited to the fact that well-studied genes have more GO-terms and that some GO-terms are very close (in the GO relationship) but they would be considered
+                different in our analysis.</li>
+          </ul>
+          <br><br>
+          <i>NOTE: This is a pilot database, which means that only a reduced number of species (see below) has been included. This has an important impact in the 
+          database content of the phylogenetically-related genes, obtained from OrthoDB. Many genes won't have any such partners because we have not included their
+          corresponding phylogenetically related species. Keep this in mind when doing your search. </i>
+          <br><br>
       
       </p>
 
@@ -98,7 +118,10 @@
       <p><i class="fa fa-asterisk" aria-hidden="true" style="font-size:8px"></i> From that list, you can select as many as you wish and then proceed to download a JSON file with them and/or query PubMed to maximise your literature search results.</p><br>
 
       <h4><i class="fa fa-check-square-o" aria-hidden="true" style="font-size:16px"></i>&nbsp;&nbsp;Find <b>phylogenetically related genes</b> from OrthoDB</h4>
-      <p>Enter your query gene/protein name or ID and a specie to retrieve a list of all phylogenetically related genes annotated inside an OrthoDB group. As a consequence of selecting a reduced number of species for this pilot version, only approximately a 10% of the genes are showing philogenetically related genes.</p>
+      <p>Enter your query gene/protein name or ID and a specie to retrieve a list of all phylogenetically related genes annotated inside an OrthoDB group. For a better clarity, we provide a list of genes that are phylogenetically related to the query, as well as which are the species that include each of these genes.
+          <a href="http://www.orthodb.org/?page=help" target="blank">Go to the OrthoDB  help page</a> for more information about how OrthoDB clusters phylogenetically related genes.
+          <br><br>
+          As a consequence of selecting a reduced number of species for this pilot version, only approximately a 10% of the genes are showing philogenetically related genes.</p>
       <p><i class="fa fa-asterisk" aria-hidden="true" style="font-size:8px"></i> From that list, you can select as many as you wish and then proceed to download a JSON file with them and/or query PubMed to maximise your literature search results.</p><br>
 
       <h4><i class="fa fa-check-square-o" aria-hidden="true" style="font-size:16px"></i>&nbsp;&nbsp;Find <b>similar proteins</b> according to PFAM domains</h4>
@@ -106,7 +129,7 @@
       <p><i class="fa fa-asterisk" aria-hidden="true" style="font-size:8px"></i> From that list, you can select as many as you wish and then proceed to download a JSON file with them and/or query PubMed to maximise your literature search results.</p><br>
 
       <h4><i class="fa fa-check-square-o" aria-hidden="true" style="font-size:16px"></i>&nbsp;&nbsp;Find proteins with <b>similar function</b> according Gene Ontology (GO)</h4>
-      <p>Enter your query gene/protein name or ID, and retrieve a list of all the described proteins which, for all the different types of Gene Ontology terms, have at least a 80% of intersection with the query.</p>
+      <p>Enter your query gene/protein name or ID, and retrieve a list of all the described proteins which, for each of the different types of Gene Ontology terms (Cellular Component, Biological Process, Molecular Function), have at least a 80% of intersection with the query.</p>
       <p><i class="fa fa-asterisk" aria-hidden="true" style="font-size:8px"></i> From that list, you can select as many as you wish and then proceed to download a JSON file with them and/or query PubMed to maximise your literature search results.</p><br>
 
 

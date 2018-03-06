@@ -27,7 +27,7 @@ foreach ($Species as $Specie){
     $sql = "SELECT g.gene_recommended_name, p.prot_recommended_name, gsyn.name_genesynonym, psyn.name_proteinsynonym, g.id_ENTREZGENE, p.id_Uniprot "
         . "FROM Gene g, Species sp, GeneSynonyms gsyn, ProteinSynonyms psyn, Proteins p "
         . "WHERE g.tax_id = sp.tax_id AND g.id_ENTREZGENE = gsyn.id_ENTREZGENE AND g.id_ENTREZGENE = p.id_ENTREZGENE AND p.id_Uniprot = psyn.id_Uniprot "
-        . "AND sp.common_name like '%".$Specie."%' AND (g.gene_recommended_name = '".$query."' OR gsyn.name_genesynonym = '".$query."' OR g.id_ENTREZGENE = '".$query."' OR psyn.name_proteinsynonym = '".$query."' OR p.prot_recommended_name = '".$query."' OR p.id_Uniprot like '".$query."\_%');";       
+        . "AND sp.common_name like '%".$Specie."%' AND (g.gene_recommended_name = '".$query."' OR gsyn.name_genesynonym = '".$query."' OR g.id_ENTREZGENE = '".$query."' OR psyn.name_proteinsynonym = '".$query."' OR p.prot_recommended_name = '".$query."' OR p.id_Uniprot = '".$query."' OR p.id_Uniprot like '".$query."\_%');";       
     
     $rs = mysqli_query($mysqli, $sql) or print mysqli_error($mysqli); 
          
@@ -41,6 +41,8 @@ foreach ($Species as $Specie){
     $Clusters=array();
     $Pfam=array();
     $Pfam['ID'] = array(); $Pfam['similar_proteins'] = array();
+    
+    print "$ProteinID<br>";
 
     $GO_terms= array(); // an array cointaining the GO decription and type of this gene. 
     $GO_terms['C'] = array(); $GO_terms['F'] = array(); $GO_terms['P'] = array(); 
@@ -312,11 +314,7 @@ foreach ($Species as $Specie){
 
     }
 
-    // BEFORE THIS IT IS PFAM
-    
-    
-    
-    
+
     //Add to $array ;
     
     $array[$Specie]= $info;
@@ -370,7 +368,23 @@ if ($something_printed===0){
 <!-- <div class="form-check">-->
     <input type="checkbox" id="select_all"/> Select All<br>
 <!--</div>-->
-         
+    <br>
+    <button type="submit" class="btn btn-primary">Submit to PubMed</button>
+    <button type="submit" formaction="my_json.php" class="btn btn-primary" id="json_submit_first">Download json array</button>
+    <div id="popup_json_submit_first" style="display: none">
+         <p><i>Click here to download your query. This is a text file containing a json array of all the names you have selected in this page. In HOME you can upload this file for a future search.</i></p>
+    </div>   
+    <script>      
+    var e = document.getElementById('json_submit_first');
+    e.onmouseover = function() {
+        document.getElementById('popup_json_submit_first').style.display = 'block';
+    }
+    e.onmouseout = function() {
+        document.getElementById('popup_json_submit_first').style.display = 'none';
+    }
+    </script>  
+    
+    <br>
 <?php
 foreach ($items as $t) {?>
 <br>
@@ -484,8 +498,9 @@ foreach ($items as $t) {?>
                             "</p>"; 
                 }
             }
+            ?><br><?php
           }
-            
+          
           if (!empty($array[$s]['Pfam']['similar_proteins'])){
             print "<h5>This protein has the following similar proteins:</h5><br>";
 
@@ -569,7 +584,7 @@ foreach ($items as $t) {?>
 }
 
 ?>
-    <br>               
+    <br>   
     <button type="submit" class="btn btn-primary">Submit to PubMed</button>
     <button type="submit" formaction="my_json.php" class="btn btn-primary" id="json_submit">Download json array</button>
     <div id="popup_json_submit" style="display: none">

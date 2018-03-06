@@ -55,7 +55,7 @@ $Names_text = " AND (\"".implode("\" OR \"",$_SESSION['queryPubmed'])."\")";
 
 ?>
 
-<form name="MainForm" id="mainform-id" autocomplete="off" action="query_pubmed.php" method="POST" enctype="multipart/form-data" class="margin-top" target="_blank">
+<form name="MainForm" id="mainform-id" autocomplete="off" action="query_pubmed.php" method="POST" enctype="multipart/form-data" class="margin-top">
           
       <div class="form-group" id="form-group">
         <label>Add some extra keywords <b>If necessary</b></label>

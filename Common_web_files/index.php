@@ -21,14 +21,14 @@ print headerDBW("Home - GLID project");
 
     <div class="form-group">
     <label>Enter your query</label>
-    <input type="text" class="form-control" id="query" name="myQuery" value="" required placeholder="Write here a gene/protein name, UniProt ID or ENTREZGENE ID (CDK2, cyclin dependent kinase 2, CDK2_HUMAN, 8246 ...)" > <!-- value="<?php //print $_SESSION['queryData']['query'] ?>" -->
+    <input type="text" class="form-control" id="query" name="myQuery" value="" required placeholder="Write here a gene/protein name, UniProt ID or ENTREZGENE ID (CDK2, cyclin dependent kinase 2, CDK2_HUMAN, 1017 ...)" > <!-- value="<?php //print $_SESSION['queryData']['query'] ?>" -->
     </div>
         
      <h5>These are some examples you could try:</h5>
-    <span><input type="button" value="A1BG" onClick="document.getElementById('query').value='A1BG'"></span>
-    <span><input type="button" value="Alpha-1B-glycoprotein" onClick="document.getElementById('query').value='Alpha-1B-glycoprotein'"></span>
-    <span><input type="button" value="CDK4" onClick="document.getElementById('query').value='CDK4'"></span>
-    <span><input type="button" value="Cyclin-dependent kinase 4" onClick="document.getElementById('query').value='Cyclin-dependent kinase 4'"></span>   
+    <span><input type="button" value="Gene: A1BG" onClick="document.getElementById('query').value='A1BG'"></span>
+    <span><input type="button" value="Protein: Alpha-1B-glycoprotein" onClick="document.getElementById('query').value='Alpha-1B-glycoprotein'"></span>
+    <span><input type="button" value="Gene ID: 1" onClick="document.getElementById('query').value='1'"></span>
+    <span><input type="button" value="Protein ID: A1BG_HUMAN" onClick="document.getElementById('query').value='A1BG_HUMAN'"></span>   
     
     
     <h2>Looking for one specie or taxonomic group?</h2>
@@ -64,6 +64,8 @@ print headerDBW("Home - GLID project");
         <label for="exampleInputText">Enter name of taxonomic group</label>
         <input id="inputtaxonomy" type="text" name="myTaxonomy" placeholder="Taxonomic group">
     </div>
+    
+    <p> <b>We recommend to fill one of these fields. In case they are empty</b></p>
 
     <script>
     function autocomplete(inp, arr) {
@@ -223,7 +225,10 @@ print headerDBW("Home - GLID project");
      Phylogenetically related genes
      </label>
     <div id="popup_orth" style="display: none">
-         <p><i>Retrieve a list of all phylogenetically related genes annotated inside an OrthoDB group. From that list, you can select as many as you wish and then proceed to download a file with them and/or query PubMed to maximise your literature search results.</i></p>
+    <p><i>Retrieve a list of all phylogenetically related genes annotated inside an OrthoDB group. For a better clarity, we provide a list of genes that are phylogenetically related to the query, as well as which are the species that include each of these genes.
+          <a href="http://www.orthodb.org/?page=help" target="blank">Go to the OrthoDB  help page</a> for more information about how OrthoDB clusters phylogenetically related genes.
+     </i></p>
+      
     </div>   
     </div>
     
