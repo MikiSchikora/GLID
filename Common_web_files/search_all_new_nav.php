@@ -84,6 +84,8 @@ foreach ($Species as $Specie){
 
     $GeneSynonyms=  array_unique($GeneSynonyms);
     $ProteinSynonyms=  array_unique($ProteinSynonyms);
+    
+    
 
     // add things to $info and $items if selected
       
@@ -101,8 +103,15 @@ foreach ($Species as $Specie){
         $info["Gene synonyms"]=$GeneSynonyms;
         $items[]="Gene synonyms";
         
-        $info["Protein synonyms"]=$ProteinSynonyms;
+        // debug protein synonyms:
+        $Final_psyns = array();
+        foreach($ProteinSynonyms as $psyn){
+            $Final_psyns[] = explode("{",$psyn)[0];
+        }
+        
+        $info["Protein synonyms"]=$Final_psyns;
         $items[]="Protein synonyms";       
+        
     }  
     
     // GENE ONTOLOGY
@@ -188,7 +197,7 @@ foreach ($Species as $Specie){
         } else {
 
             //Here we have an array with the different orthologue cluster names and search MySQL with this name
-            // I DONT KNOW IF THIS WORKS!!!!!!
+            
             // The idea is to loop through the array of ortho clusters
             $i=0;
             while ($cluster_rsF = mysqli_fetch_array($cluster_rs) and $i<10) {
